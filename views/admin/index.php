@@ -12,9 +12,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row location-index">
 
-
-
-
     <div class="col-md-4">
         <div class="well">
             <blockquote><span class="glyphicon glyphicon-globe"></span> Location Management</blockquote>
@@ -37,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'filterModel' => $searchModel,
             'columns' => [
                 'postcode',
-                'label',
+                'name',
                 'language'
             //['class' => 'yii\grid\ActionColumn'],
             ],

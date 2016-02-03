@@ -20,7 +20,7 @@ use humanized\location\models\location\Country;
     ?>
     <div class="row">
         <div class="col-sm-3">
-            <?php echo $form->field($model, 'country_id')->label(false)->dropDownList(ArrayHelper::map(Country::available(), 'iso_2', 'iso_3'), ['onChange' => 'this.form.submit()']); ?>
+            <?php echo $form->field($model, 'country_id')->label(false)->dropDownList(Country::dropdown(), ['onChange' => 'this.form.submit()']); ?>
         </div>
 
     </div>

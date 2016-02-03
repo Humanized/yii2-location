@@ -38,7 +38,7 @@ class LocationSelector extends Widget {
         $countryDropdown = Select2::widget([
                     'name' => 'country',
                     'value' => '',
-                    'data' => ArrayHelper::map(Country::available(), 'iso_2', 'iso_3'),
+                    'data' => Country::dropdown(),
                     'options' => [ 'label' => 'yaya', 'placeholder' => 'Select Country ...', 'id' => 'country-selection']
         ]);
 
@@ -54,7 +54,7 @@ class LocationSelector extends Widget {
             'pluginOptions' => [
                 'depends' => ['country-selection'],
                 'placeholder' => 'Select Location',
-                'url' => Url::to(['/contact/location/load'])
+                'url' => Url::to(['/location/admin/load'])
             ]
         ]);
 
