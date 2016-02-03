@@ -19,6 +19,7 @@ use yii\helpers\ArrayHelper;
  */
 class Location extends \yii\db\ActiveRecord {
 
+    public $name;
     public $label;
     public $language;
 
@@ -84,9 +85,9 @@ class Location extends \yii\db\ActiveRecord {
         $query->leftJoin('city_translation default_label', '(`city`.`id`=`default_label`.`city_id` AND `city`.`language_id`=`default_label`.`language_id`)');
         $query->leftJoin('city_translation localised_label', "(`city`.`id`=`localised_label`.`city_id` AND $exp =`localised_label`.`language_id`)");
 
-        $seperator = new Expression("' - '");
         $query->select = [
             'id' => 'location.id',
+            'name' => 'IF(localised_label.name IS NULL, default_label.name, localised_label.name)',
             'label' => 'CONCAT(IF(localised_label.name IS NULL, default_label.name, localised_label.name),\' (\',postcode,\')\')',
             'postcode' => 'location.postcode',
             'language' => 'city.language_id'

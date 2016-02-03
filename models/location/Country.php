@@ -2,7 +2,9 @@
 
 namespace humanized\location\models\location;
 
-use Yii;
+use humanized\translation\models\Language;
+use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "country".
@@ -67,17 +69,43 @@ class Country extends \yii\db\ActiveRecord {
 
     public static function available()
     {
-        return self::find()->all();
+        $searchModel = (new Country())->_query();
+
+        return $searchModel->asArray()->all();
     }
 
     public static function dropdown()
     {
-        
+        $data = self::available();
+        return ArrayHelper::map($data, 'code', 'label');
     }
 
     public static function enabled()
     {
         
+    }
+
+    protected function _query()
+    {
+        $query = Country::find();
+        $currentLanguage = substr(Language::current(), 0, 2);
+        $local = new Expression("'$currentLanguage'");
+        $fallbackLanguage = substr(Language::fallback(), 0, 2);
+        $fallback = new Expression("'$fallbackLanguage'");
+
+        $query->leftJoin('country_translation default_label', "(`country`.`iso_2`=`default_label`.`country_id` AND $fallback=`default_label`.`language_id`)");
+        $query->leftJoin('country_translation localised_label', "(`country`.`iso_2`=`localised_label`.`country_id` AND $local =`localised_label`.`language_id`)");
+        $query->select = [
+            'code' => 'iso_2',
+            'label'=>'CONCAT(IF(localised_label.common_name IS NULL, default_label.common_name,localised_label.common_name),\' (\',iso_2,\')\')',
+            'has_postcodes' => 'has_postcodes',
+            'common_name' => 'IF(localised_label.common_name IS NULL, default_label.common_name,localised_label.common_name)',
+            'official_name' => 'IF(localised_label.official_name IS NULL, default_label.official_name,localised_label.official_name)',
+            'common' => 'IF(localised_label.common_name IS NULL, default_label.common_name,localised_label.common_name)',
+            'official' => 'IF(localised_label.official_name IS NULL, default_label.official_name,localised_label.official_name)',
+        ];
+        $query->groupBy('code');
+        return $query;
     }
 
 }

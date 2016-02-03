@@ -18,7 +18,7 @@ class LocationSearch extends Location {
     {
         return [
             [['id', 'city_id'], 'integer'],
-            [['label', 'postcode', 'country_id'], 'safe'],
+            [['name', 'postcode', 'country_id'], 'safe'],
         ];
     }
 
@@ -50,7 +50,7 @@ class LocationSearch extends Location {
             ],
             'sort' => [
                 'attributes' => [
-                    'label', 'postcode', 'language'
+                    'name', 'postcode', 'language'
                 ],
             ]
         ]);
@@ -59,12 +59,12 @@ class LocationSearch extends Location {
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
+            $query->where('0=1');
             return $dataProvider;
         }
 
         $query->andFilterWhere(['like', 'postcode', $this->postcode])
-                ->andFilterWhere(['like', 'localised_label.name', $this->label]);
+                ->andFilterWhere(['like', 'localised_label.name', $this->name]);
 
         return $dataProvider;
     }
