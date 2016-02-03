@@ -1,8 +1,8 @@
 <?php
 
-namespace humanized\contact\components;
+namespace humanized\location\components;
 
-use humanized\contact\components\DataHelper;
+use humanized\location\components\DataHelper;
 
 /**
  * A collection of static helper functions to implement the user management 
@@ -23,8 +23,8 @@ class GUIHelper {
     {
         $output = [];
 
-        $output[] = ['label' => 'Locations', 'url' => ['/contact/location/index']];
-        $output[] = ['label' => 'Countries', 'url' => ['/contact/country/index']];
+        $output[] = ['label' => 'Locations', 'url' => ['/location/admin/index']];
+        $output[] = ['label' => 'Countries', 'url' => ['/location/country/index']];
         //     if (NULL !== \Yii::$app->user->getId()) {
         //  $output[] = ['label' => 'My Profile', 'url' => ['/user/account', 'id' => \Yii::$app->user->getId()]];
         //$output[] = ['label' => 'Account Settings', 'url' => ['/user/admin/settings', 'id' => \Yii::$app->user->getId()]];

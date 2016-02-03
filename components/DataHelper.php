@@ -1,10 +1,10 @@
 <?php
 
-namespace humanized\contact\components;
+namespace humanized\location\components;
 
-use humanized\contact\models\location\Country;
-use humanized\contact\models\location\City;
-use humanized\contact\models\location\Location;
+use humanized\location\models\location\Country;
+use humanized\location\models\location\City;
+use humanized\location\models\location\Location;
 
 /**
  * A collection of static helper functions to implement the user management 

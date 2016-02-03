@@ -41,7 +41,7 @@ class AdminController extends Controller {
         }
 
         $searchModel = new LocationSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
 
         return $this->render('index', [
                     'searchModel' => $searchModel,

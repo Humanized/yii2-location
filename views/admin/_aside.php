@@ -8,7 +8,7 @@
  * 
  */
 use yii\widgets\Menu;
-use humanized\contact\components\GUIHelper;
+use humanized\location\components\GUIHelper;
 
 echo Menu::widget([
     'items' => GUIHelper::getMenuItems(),
