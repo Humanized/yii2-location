@@ -18,7 +18,7 @@ $form = ActiveForm::begin([
  * Select2 for County Selection Dropdown
  */
 echo $form->field($model, 'country_id')->widget(Select2::classname(), [
-    'data' => \humanized\contact\components\GUIHelper::getCountryList(),
+    'data' => \humanized\location\components\GUIHelper::getCountryList(),
     'options' => ['placeholder' => 'Select Country'],
     'pluginOptions' => [
         'allowClear' => true

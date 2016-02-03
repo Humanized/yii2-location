@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-use humanized\contact\models\location\Country;
+use humanized\location\models\location\Country;
 
 /* @var $this yii\web\View */
 /* @var $model humanized\contact\models\location\CitySearch */
