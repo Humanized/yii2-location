@@ -7,8 +7,7 @@ use humanized\location\models\location\City;
 use humanized\location\models\location\Country;
 use humanized\location\models\translation\CityTranslation;
 use humanized\location\models\translation\CountryTranslation;
-use humanized\locationmodels\location\Location;
-
+use humanized\location\models\location\Location;
 
 /**
  * A CLI allowing Yii2 location managementS.
@@ -104,18 +103,21 @@ class ImportController extends Controller {
         }
     }
 
-    public function actionImportDefault($cntry)
+    public function actionImportDefault($fn)
     {
-        $fileName = \Yii::getAlias('@data') . "/location/$cntry.csv";
+        $fileName = \Yii::getAlias('@data') . "/location/$fn.csv";
         $file = fopen($fileName, "r");
+        $countryCode = substr($fn, 0, 2);
+        $languageCode = substr($fn, 2, 2);
         fgetcsv($file, 0);
         while (!feof($file)) {
             $record = fgetcsv($file, 0, ';');
+
             if (isset($record[0])) {
-                $city = new City(['language_id' => $record[3]]);
+                $city = new City(['language_id' => $languageCode]);
                 $city->save();
-                (new CityTranslation(['name' => $record[2], 'city_id' => $city->id, 'language_id' => $record[3]]))->save();
-                (new Location(['city_id' => $city->id, 'country_id' => $record[0], 'postcode' => $record[1]]))->save();
+                (new CityTranslation(['name' => $record[1], 'city_id' => $city->id, 'language_id' => $languageCode]))->save();
+                (new Location(['city_id' => $city->id, 'country_id' => $countryCode, 'postcode' => $record[0]]))->save();
             } else {
                 break;
             }
