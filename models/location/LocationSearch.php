@@ -11,6 +11,8 @@ use humanized\location\models\location\Location;
  */
 class LocationSearch extends Location {
 
+    public $q = '';
+
     /**
      * @inheritdoc
      */
@@ -18,7 +20,7 @@ class LocationSearch extends Location {
     {
         return [
             [['id', 'city_id'], 'integer'],
-            [['name', 'postcode', 'country_id'], 'safe'],
+            [['q', 'name', 'postcode', 'country_id'], 'safe'],
         ];
     }
 
@@ -63,8 +65,12 @@ class LocationSearch extends Location {
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['like', 'postcode', $this->postcode])
-                ->andFilterWhere(['like', 'default_label.name', $this->name]);
+        $query->andFilterWhere([
+            'or',
+            ['like', 'postcode', $this->q],
+            ['like', 'localised_label.name', $this->q],
+            ['like', 'default_label.name', $this->q],
+        ]);
 
 
 
