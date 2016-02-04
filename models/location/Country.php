@@ -29,6 +29,14 @@ class Country extends \yii\db\ActiveRecord {
         return 'country';
     }
 
+    public function fields()
+    {
+        return [
+            // field name is the same as the attribute name
+            'code', 'common_name', 'official_name', 'has_postcodes',
+        ];
+    }
+
     /**
      * @inheritdoc
      */
@@ -97,7 +105,7 @@ class Country extends \yii\db\ActiveRecord {
         $query->leftJoin('country_translation localised_label', "(`country`.`iso_2`=`localised_label`.`country_id` AND $local =`localised_label`.`language_id`)");
         $query->select = [
             'code' => 'iso_2',
-            'label'=>'CONCAT(IF(localised_label.common_name IS NULL, default_label.common_name,localised_label.common_name),\' (\',iso_2,\')\')',
+            'label' => 'CONCAT(IF(localised_label.common_name IS NULL, default_label.common_name,localised_label.common_name),\' (\',iso_2,\')\')',
             'has_postcodes' => 'has_postcodes',
             'common_name' => 'IF(localised_label.common_name IS NULL, default_label.common_name,localised_label.common_name)',
             'official_name' => 'IF(localised_label.official_name IS NULL, default_label.official_name,localised_label.official_name)',

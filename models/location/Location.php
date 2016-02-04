@@ -31,6 +31,14 @@ class Location extends \yii\db\ActiveRecord {
         return 'location';
     }
 
+    public function fields()
+    {
+        return [
+            // field name is the same as the attribute name
+            'id', 'postcode', 'name',
+        ];
+    }
+
     /**
      * @inheritdoc
      */
@@ -115,16 +123,10 @@ class Location extends \yii\db\ActiveRecord {
 
     public function beforeValidate()
     {
-
         if (isset($this->cityName) && isset($this->cityLanguage)) {
-
             $params = [
                 'name' => $this->cityName,
-                'language_id
-
-        
-
-         ' => strtoupper($this->cityLanguage),
+                'language_id' => strtoupper($this->cityLanguage),
             ];
             $model = City::findOne($params);
             if (!isset($model)) {
@@ -133,14 +135,7 @@ class Location extends \yii\db\ActiveRecord {
             }
             $this->city_id = $model->id;
         }
-
         return parent::beforeValidate();
-    }
-
-    public function save($runValidation = true, $attributeNames = NULL)
-    {
-
-        return parent::save();
     }
 
 }

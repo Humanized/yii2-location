@@ -60,6 +60,8 @@ class CountrySearch extends Country {
         }
 
         $query->andFilterWhere(['iso_2' => $this->code]);
+        $query->andFilterWhere(['default_label.common_name' => $this->common_name]);
+        $query->andFilterWhere(['default_label.official_name' => $this->official_name]);
         return $dataProvider;
     }
 
