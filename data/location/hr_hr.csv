@@ -1,0 +1,370 @@
+10000;Zagreb
+10010;Zagreb-Sloboština
+10020;Zagreb-Novi Zagreb
+10040;Zagreb-Dubrava
+10090;Zagreb-Susedgrad
+10110;Zagreb
+10250;Lučko
+10255;Gornji Stupnik
+10257;Brezovica
+10290;Zaprešić
+10291;Prigorje Brdovečko
+10292;Šenkovec
+10295;Kupljenovo
+10297;Jakovlje
+10298;Donja Bistra
+10310;Ivanić Grad
+10314;Križ
+10340;Vrbovec
+10340;vrbovec
+10342;Dubrava
+10360;Sesvete
+10361;Sesvete Kraljevec
+10362;Kašina
+10363;Belovar
+10370;Dugo Selo
+10380;Sveti Ivan Zelina
+10410;Velika Gorica
+10411;Orle
+10412;Donja Lomnica
+10413;Kravarsko
+10414;Pokupsko
+10430;Samobor
+10431;Sveta Nedelja
+10432;Bregana
+10435;Sveti Martin pod Okićem
+10436;Rakov Potok
+10450;Jastrebarsko
+10451;Pisarovina
+10454;Krašić
+20000;Dubrovnik
+20205;Topolo
+20207;Mlini
+20210;Cavtat
+20215;Gruda
+20221;Koločep
+20222;Lopud
+20223;Šipanska Luka
+20225;Babino Polje
+20226;Goveđari
+20230;Ston
+20232;Slano
+20235;Zaton Veliki
+20236;Mokošica
+20240;Trpanj
+20243;Kuna
+20244;Potomje
+20246;Janjina
+20247;Žuljana
+20250;Orebić
+20260;Korčula
+20270;Vela Luka
+20271;Blato
+20274;Pupnat
+20290;Lastovo
+20340;Ploče
+20350;Metković
+20353;Mlinište
+20355;Opuzen
+21000;Split
+21201;Prgomet
+21202;Lećevica
+21203;Donji Muć
+21204;Dugopolje
+21210;Solin
+21212;Kaštel Sućurac
+21214;Kaštel Kambelovac
+21217;Kaštel Štafilić
+21220;Trogir
+21222;Marina
+21225;Drvenik Veliki
+21230;Sinj
+21232;Dicmo
+21233;Hrvace
+21236;Vrlika
+21238;Otok (Dalmacija)
+21240;Trilj
+21250;Šestanovac
+21256;Cista Provo
+21260;Imotski
+21270;Zagvozd
+21275;Dragljane
+21276;Vrgorac
+21292;Srinjine
+21300;Makarska
+21310;Omiš
+21311;Stobreč
+21315;Dugi Rat
+21320;Baška Voda
+21327;Podgora
+21334;Zaostrog
+21400;Supetar
+21405;Milna
+21410;Postira
+21412;Pučišća
+21420;Bol
+21425;Selca
+21430;Grohote
+21450;Hvar
+21460;Stari Grad
+21465;Jelsa
+21469;Sućuraj
+21480;Vis
+21485;Komiža
+22000;Šibenik
+22202;Primošten
+22211;Vodice
+22213;Pirovac
+22215;Zaton
+22222;Skradin
+22232;Zlarin
+22233;Prvić Luka
+22234;Prvić Šepurine
+22235;Kaprije
+22236;Žirje
+22240;Tisno
+22243;Murter
+22300;Knin
+22320;Drniš
+22323;Unešić
+23000;Zadar
+23205;Bibinje
+23206;Sukošan
+23210;Biograd na Moru
+23210;Biograd na moru
+23212;Tkon
+23222;Zemunik
+23223;Škabrnja
+23232;Nin
+23233;Privlaka
+23234;Vir
+23235;Vrsi
+23241;Poličnik
+23242;Posedarje
+23244;Starigrad Paklenica
+23248;Ražanac
+23250;Pag
+23271;Kukljica
+23273;Preko
+23281;Sali
+23283;Rava
+23284;Veli Iž
+23286;Božava
+23287;Veli Rat
+23291;Sestrunj
+23292;Molat
+23293;Ist
+23294;Premuda
+23295;Silba
+23296;Olib
+23312;Novigrad (Dalmacija)
+23420;Benkovac
+23422;Stankovci
+23440;Gračac
+23450;Obrovac
+31000;Osijek
+31207;Tenja
+31216;Antunovac
+31220;Višnjevac
+31222;Bizovac
+31224;Koška
+31226;Dalj
+31300;Beli Manastir
+31306;Batina
+31309;Kneževi Vinogradi
+31326;Darda
+31327;Bilje
+31400;Đakovo
+31402;Semeljci
+31410;Strizivojna
+31418;Drenje
+31431;Čepin
+31433;Podgorač
+31500;Našice
+31511;Đurđenovac
+31540;Donji Miholjac
+31550;Valpovo
+31551;Belišće
+32000;Vukovar
+32100;Vinkovci
+32213;Markušica
+32221;Nuštar
+32236;Ilok
+32237;Lovas
+32242;Slakovci
+32245;Nijemci
+32249;Tovarnik
+32252;Otok
+32260;Gunja
+32270;Županja
+32271;Rokovci-Andrijaševci
+32272;Cerna
+32276;Babina Greda
+32280;Jarmina
+32281;Ivankovo
+32284;Stari Mikanovci
+33000;Virovitica
+33404;Špišić Bukovica
+33405;Pitomača
+33406;Lukač
+33410;Suhopolje
+33514;Čačinci
+33515;Orahovica
+33520;Slatina
+33522;Voćin
+33523;Čađavica
+34000;Požega
+34310;Pleternica
+34330;Velika
+34340;Kutjevo
+34350;Čaglin
+34543;Poljana
+34550;Pakrac
+34551;Lipik
+35000;Slavonski Brod
+35212;Garčin
+35214;Donji Andrijevci
+35220;Slavonski Šamac
+35221;Velika Kopanica
+35222;Gundinci
+35250;Oriovac
+35252;Sibinj
+35400;Nova Gradiška
+35410;Nova Kapela
+35420;Staro Petrovo Selo
+35425;Davor
+35430;Okučani
+35435;Stara Gradiška
+40000;Čakovec
+40313;Sveti Martin na Muri
+40315;Mursko Središče
+40320;Donji Kraljevec
+40323;Prelog
+42000;Varaždin
+42202;Trnovec Bartolovečki
+42204;Turčin
+42208;Cestica
+42220;Novi Marof
+42223;Varaždinske Toplice
+42230;Ludbreg
+42240;Ivanec
+42243;Maruševec
+42250;Lepoglava
+42253;Bednja
+43000;Bjelovar
+43231;Ivanska
+43232;Berek
+43240;Čazma
+43270;Veliki Grđevac
+43280;Garešnica
+43290;Grubišno Polje
+43500;Daruvar
+43532;Đulovac
+44000;Sisak
+44010;Sisak-Caprag
+44203;Gušće
+44210;Sunja
+44250;Petrinja
+44272;Lekenik
+44317;Popovača
+44320;Kutina
+44330;Novska
+44400;Glina
+44410;Vrginmost
+44430;Hrvatska Kostajnica
+44440;Dvor
+47000;Karlovac
+47206;Lasinja
+47220;Vojnić
+47240;Slunj
+47245;Rakovica
+47250;Duga Resa
+47262;Generalski Stol
+47271;Netretić
+47280;Ozalj
+47300;Ogulin
+47303;Josipdol
+47304;Plaški
+47306;Saborsko
+48000;Koprivnica
+48214;Sveti Ivan Žabno
+48260;Križevci
+48267;Orehovec
+48306;Sokolovac
+48312;Rasinja
+48316;Đelekovec
+48331;Gola
+48350;Đurđevac
+49000;Krapina
+49210;Zabok
+49216;Desinić
+49217;Krapinske Toplice
+49218;Pregrada
+49221;Bedekovčina
+49223;Sveti Križ Začretje
+49225;Đurmanec
+49231;Hum na Sutli
+49232;Radoboj
+49234;Petrovsko
+49240;Donja Stubica
+49243;Oroslavje
+49246;Marija Bistrica
+49247;Zlatar Bistrica
+49250;Zlatar
+49252;Mihovljan
+49282;Konjščina
+49284;Budinščina
+49290;Klanjec
+51000;Rijeka
+51211;Matulji
+51214;Šapjane
+51215;Kastav
+51216;Viškovo
+51217;Klana
+51218;Dražice
+51222;Bakar
+51223;Škrljevo
+51226;Hreljin
+51250;Novi Vinodolski
+51260;Crikvenica
+51262;Kraljevica
+51280;Rab
+51300;Delnice
+51306;Čabar
+51326;Vrbovsko
+51410;Opatija
+51415;Lovran
+51417;Mošćenička Draga
+51500;Krk
+51511;Malinska
+51523;Baška
+51550;Mali Lošinj
+51552;Ilovik
+51556;Martinšćica
+51557;Cres
+51561;Susak
+51562;Unije
+52000;Pazin
+52100;Pula (Pola)
+52207;Barban
+52210;Rovinj (Rovigno)
+52220;Labin
+52333;Podpićan
+52341;Žminj
+52420;Buzet
+52424;Motovun (Montona)
+52440;Poreč (Parenzo)
+52447;Vižinada
+52460;Buje (Buie)
+52466;Novigrad-Cittanova
+52470;Umag (Umago)
+53000;Gospić
+53202;Perušić
+53220;Otočac
+53230;Korenica
+53234;Udbina
+53250;Donji Lapac
+53260;Brinje
+53270;Senj
+53288;Karlobag
+53291;Novalja
