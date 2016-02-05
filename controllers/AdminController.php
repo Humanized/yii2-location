@@ -8,6 +8,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use GuzzleHttp\Client;
 
 /**
  * LocationController implements the CRUD actions for Location model.
@@ -115,18 +116,37 @@ class AdminController extends Controller {
     public function actionLoad()
     {
         if (isset($_POST['depdrop_parents'])) {
-            $parents = $_POST['depdrop_parents'];
+
+            $countryCode = $_POST['depdrop_parents'][0];
+            $list = Location::all($countryCode);
+
+            //Get API Results
+            $client = new Client([
+                // Base URI is used with relative requests
+                'base_uri' => 'localhost/dev/viajero/api/',
+                'auth' => ['AZCNZ6z-HSL-Kw24QO7U74u9guIc8NA63ogqO_uqw-KUpqC-mOTycuCwcfRBkP4VO-4cGGHlKaf1zrmrUzcxpvt6KFgrlZOzUP6d', ''],
+            ]);
+
+            $list = Json::decode($client->request('GET', "places?country=$countryCode")->getBody(),true);
+
             //Map data
             //Records are format ['id'=>$rec['id],'name'=>$rec['label']]
-            $data = array_map(function($r) {
-                return ['id' => $r['id'], 'name' => $r['label']];
-            }, Location::all($parents[0]));
+            
+              $data = array_map(function($r) {
+              return ['id' => $r['id'], 'name' => $r['label']];
+              }, $list);
+            
             echo Json::encode(['output' => $data, 'selected' => '']);
 
             return;
         }
 
         echo Json::encode(['output' => '', 'selected' => '']);
+    }
+
+    public function loadDefault()
+    {
+        
     }
 
     /**

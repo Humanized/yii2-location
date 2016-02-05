@@ -35,7 +35,7 @@ class Location extends \yii\db\ActiveRecord {
     {
         return [
             // field name is the same as the attribute name
-            'id', 'postcode', 'name',
+            'id', 'postcode', 'name','label'
         ];
     }
 

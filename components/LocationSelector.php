@@ -24,7 +24,7 @@ class LocationSelector extends Widget {
     public $form = NULL;
     public $model = NULL;
     public $enableBootstrap = FALSE;
-    public $countryTemplate = '{}{}{}';
+    public $countryTemplate = '{flag} {label} ({code})';
     public $cityTemplate = '{}{}';
 
     public function init()

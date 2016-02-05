@@ -16,19 +16,7 @@ namespace humanized\location;
 class Module extends \yii\base\Module {
 
     public $tablePrefix = NULL;
-    public $enableTranslations = FALSE;
-    public $locationOptions = [
-        'enableTranslations' => FALSE,
-        'gridOptions' => [
-            'enablePjax' => TRUE,
-            'enablePostCodes' => TRUE,
-        ],
-        'api' => [
-            'url' => NULL,
-            'username' => NULL,
-            'token' => NULL
-        ]
-    ];
+    public $widgetConfig = [];
 
     public function init()
     {
@@ -37,6 +25,13 @@ class Module extends \yii\base\Module {
             $this->controllerNamespace = 'humanized\location\commands';
         }
         $this->params['tablePrefix'] = $this->tablePrefix;
+        $this->_initWidget();
+    }
+
+    public function _initWidget()
+    {
+        
+        $this->params['widgetConfig'] = $this->widgetConfig;
     }
 
 }

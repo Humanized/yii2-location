@@ -50,6 +50,7 @@ class LocationSearch extends Location {
             'pagination' => [
                 'pageSize' => 10,
             ],
+            'pagination' => false,
             'sort' => [
                 'attributes' => [
                     'name', 'postcode', 'language'

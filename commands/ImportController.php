@@ -37,17 +37,20 @@ use humanized\location\models\location\Location;
 class ImportController extends Controller {
 
     private $_languages = [
-        'deu' => 'de',
-        'fra' => 'fr',
-        'hrv' => 'hr',
-        'ita' => 'it',
-        'jpn' => 'ja',
-        'nld' => 'nl',
-        'por' => 'pt',
-        'rus' => 'ru',
-        'spa' => 'es',
-        'fin' => 'fi',
+        'deu' => 'de', 'fra' => 'fr',
+        'hrv' => 'hr', 'ita' => 'it',
+        'jpn' => 'ja', 'nld' => 'nl',
+        'por' => 'pt', 'rus' => 'ru',
+        'spa' => 'es', 'fin' => 'fi',
         'cym' => 'cy',
+    ];
+    private $_without_pc = [
+        "AO", "AG", "AW", "BS", "BZ", "BJ", "BW", "BF", "BI", "CM", "CF", "KM",
+        "CG", "CD", "CK", "CI", "DJ", "DM", "GQ", "ER", "FJ", "TF", "GM", "GH",
+        "GD", "GN", "GY", "HK", "IE", "JM", "KE", "KI", "MO", "MW", "ML", "MR",
+        "MU", "MS", "NR", "AN", "NU", "KP", "PA", "QA", "RW", "KN", "LC", "ST",
+        "SA", "SC", "SL", "SB", "SO", "ZA", "SR", "SY", "TZ", "TL", "TK", "TO",
+        "TT", "TV", "UG", "AE", "VU", "YE", "ZW"
     ];
 
     public function actionNuts()
@@ -156,8 +159,7 @@ class ImportController extends Controller {
         $json = file_get_contents($fn);
         $object = json_decode($json);
         foreach ($object as $record) {
-
-            (new Country(['iso_2' => $record->cca2, 'iso_3' => $record->cca3, 'has_postcodes' => 1, 'iso_numerical' => $record->ccn3]))->save();
+            (new Country(['iso_2' => $record->cca2, 'iso_3' => $record->cca3, 'has_postcodes' => in_array($record->cca2, $this->_without_pc) ? 0 : 1, 'iso_numerical' => $record->ccn3]))->save();
             //English Translation
             (new CountryTranslation(['language_id' => 'en', 'country_id' => $record->cca2, 'official_name' => $record->name->official, 'common_name' => $record->name->common, 'demonym' => $record->demonym]))->save();
             $this->_translateCountryRecord($record);
@@ -169,7 +171,6 @@ class ImportController extends Controller {
     {
         $code = $record->cca2;
         foreach ($record->translations as $key => $translation) {
-
             (new CountryTranslation(['country_id' => $code, 'language_id' => $this->_languages[$key], 'official_name' => $translation->official, 'common_name' => $translation->common,]))->save();
         }
     }

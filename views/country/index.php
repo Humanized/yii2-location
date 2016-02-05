@@ -3,12 +3,16 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 
+
 /* @var $this yii\web\View */
 /* @var $searchModel humanized\contact\models\country\LocationSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Locations';
 $this->params['breadcrumbs'][] = $this->title;
+
+
+
 ?>
 <div class="row country-index">
 
