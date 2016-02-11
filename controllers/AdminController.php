@@ -116,31 +116,27 @@ class AdminController extends Controller {
     public function actionLoad()
     {
         if (isset($_POST['depdrop_parents'])) {
-
             $countryCode = $_POST['depdrop_parents'][0];
-            $list = Location::all($countryCode);
-
-            //Get API Results
-            $client = new Client([
-                // Base URI is used with relative requests
-                'base_uri' => 'localhost/dev/viajero/api/',
-                'auth' => ['AZCNZ6z-HSL-Kw24QO7U74u9guIc8NA63ogqO_uqw-KUpqC-mOTycuCwcfRBkP4VO-4cGGHlKaf1zrmrUzcxpvt6KFgrlZOzUP6d', ''],
-            ]);
-
-            $list = Json::decode($client->request('GET', "places?country=$countryCode")->getBody(),true);
-
+            $list = NULL;
+            if (!\Yii::$app->controller->module->params['enableRemote']) {
+                $list = Location::all($countryCode);
+            } else {
+                //Get API Results
+                $client = new Client([
+                    // Base URI is used with relative requests
+                    'base_uri' => \Yii::$app->controller->module->params['remoteSettings']['uri'],
+                    'auth' => [\Yii::$app->controller->module->params['remoteSettings']['token'], ''],
+                ]);
+                $list = Json::decode($client->request('GET', "places?country=$countryCode")->getBody(), true);
+            }
             //Map data
             //Records are format ['id'=>$rec['id],'name'=>$rec['label']]
-            
-              $data = array_map(function($r) {
-              return ['id' => $r['id'], 'name' => $r['label']];
-              }, $list);
-            
+            $data = array_map(function($r) {
+                return ['id' => $r['id'], 'name' => $r['label']];
+            }, $list);
             echo Json::encode(['output' => $data, 'selected' => '']);
-
             return;
         }
-
         echo Json::encode(['output' => '', 'selected' => '']);
     }
 

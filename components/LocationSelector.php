@@ -48,7 +48,7 @@ class LocationSelector extends Widget {
             'select2Options' => [
                 'pluginOptions' => [
                     'allowClear' => TRUE,
-                    'minimumInputLength' => 4,
+                    'minimumInputLength' => 3,
                 ]
             ],
             'pluginOptions' => [

@@ -16,7 +16,8 @@ namespace humanized\location;
 class Module extends \yii\base\Module {
 
     public $tablePrefix = NULL;
-    public $widgetConfig = [];
+    public $enableRemote = FALSE;
+    public $remoteSettings = ['uri' => NULL, 'token' => NULL];
 
     public function init()
     {
@@ -25,13 +26,18 @@ class Module extends \yii\base\Module {
             $this->controllerNamespace = 'humanized\location\commands';
         }
         $this->params['tablePrefix'] = $this->tablePrefix;
-        $this->_initWidget();
+        if ($this->enableRemote) {
+            $this->_initRemote();
+        }
     }
 
-    public function _initWidget()
+    private function _initRemote()
     {
-        
-        $this->params['widgetConfig'] = $this->widgetConfig;
+        $this->params['enableRemote'] = TRUE;
+        if (!empty($this->remoteSettings)) {
+            $this->params['remoteSettings'] = $this->remoteSettings;
+            return;
+        }
     }
 
 }
