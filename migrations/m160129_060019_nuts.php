@@ -30,7 +30,7 @@ class m160129_060019_nuts extends Migration {
         ]);
         $this->addForeignKey('fk_nuts_location_nuts', 'nuts_location', 'nuts_id', 'nuts', 'code', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk_nuts_location_location', 'nuts_location', 'location_id', 'location', 'id', 'CASCADE', 'CASCADE');
-        $this->addPrimaryKey('pk_nuts_location', 'nuts_location', ['nuts', 'location']);
+        $this->addPrimaryKey('pk_nuts_location', 'nuts_location', ['nuts_id', 'location_id']);
     }
 
     public function safeDown()
