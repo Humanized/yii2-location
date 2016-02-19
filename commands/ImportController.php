@@ -89,7 +89,7 @@ class ImportController extends Controller {
 
     public function actionImportBe()
     {
-        $fileName = \Yii::getAlias('@data') . '/location/be.csv';
+        $fileName = \Yii::getAlias('@data') . '/location/be_nlfr.csv';
         $file = fopen($fileName, "r");
         while (!feof($file)) {
             $record = fgetcsv($file, 0, ';');
