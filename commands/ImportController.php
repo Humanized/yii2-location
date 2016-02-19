@@ -137,7 +137,7 @@ class ImportController extends Controller {
     {
         //Set filename to default location
         if (!isset($fn)) {
-            $fn = \Yii::getAlias('@vendor') . '/humanized/yii2-contact/data/countries/countries.csv';
+            $fn = \Yii::getAlias('@vendor') . '/humanized/yii2-location/data/countries/countries.csv';
         }
         $file = fopen($fn, "r");
         while (!feof($file)) {
