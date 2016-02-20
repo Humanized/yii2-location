@@ -155,7 +155,7 @@ class ImportController extends Controller {
      */
     public function actionCountryTranslations()
     {
-        $fn = \Yii::getAlias('@vendor') . '/humanized/yii2-contact/data/countries/countries.json';
+        $fn = \Yii::getAlias('@vendor') . '/humanized/yii2-location/data/countries/countries.json';
         $json = file_get_contents($fn);
         $object = json_decode($json);
         foreach ($object as $record) {
