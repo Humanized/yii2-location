@@ -10,6 +10,7 @@ use Yii;
  * This is the model class for table "city".
  *
  * @property integer $id
+ * @property string $uid
  * @property string $language_id
  *
  * @property Language $language
@@ -17,7 +18,8 @@ use Yii;
  * @property Language[] $languages
  * @property Location[] $locations
  */
-class City extends \yii\db\ActiveRecord {
+class City extends \yii\db\ActiveRecord
+{
 
     /**
      * @inheritdoc
@@ -33,9 +35,11 @@ class City extends \yii\db\ActiveRecord {
     public function rules()
     {
         return [
-            [['language_id'], 'required'],
+            [['language_id', 'uid'], 'required'],
+            [['uid'], 'string', 'max' => 23],
             [['language_id'], 'string', 'max' => 5],
             [['language_id'], 'exist', 'skipOnError' => true, 'targetClass' => Language::className(), 'targetAttribute' => ['language_id' => 'code']],
+            [['uid'], 'unique', 'targetAttribute' => ['uid']]
         ];
     }
 
@@ -46,6 +50,7 @@ class City extends \yii\db\ActiveRecord {
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'uid' => Yii::t('app', 'Uid'),
             'language_id' => Yii::t('app', 'Language ID'),
         ];
     }

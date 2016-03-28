@@ -10,14 +10,18 @@ use yii\helpers\ArrayHelper;
  * This is the model class for table "location".
  *
  * @property integer $id
+ * @property string $uid
  * @property string $postcode
  * @property string $country_id
  * @property integer $city_id
  *
  * @property City $city
  * @property Country $country
+ * @property NutsLocation[] $nutsLocations
+ * @property Nuts[] $nuts
  */
-class Location extends \yii\db\ActiveRecord {
+class Location extends \yii\db\ActiveRecord
+{
 
     public $name;
     public $label;
@@ -35,7 +39,7 @@ class Location extends \yii\db\ActiveRecord {
     {
         return [
             // field name is the same as the attribute name
-            'id', 'postcode', 'name','label'
+            'id', 'postcode', 'name', 'label'
         ];
     }
 
@@ -45,13 +49,15 @@ class Location extends \yii\db\ActiveRecord {
     public function rules()
     {
         return [
-            [['country_id', 'city_id'], 'required'],
-            [['city_id'], 'integer'],
-            [['postcode'], 'string', 'max' => 20],
-            [['country_id'], 'string', 'max' => 2],
-            [['city_id'], 'exist', 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
-            [['country_id'], 'exist', 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'iso_2']],
-            [['postcode', 'country_id', 'city_id'], 'unique', 'targetAttribute' => ['postcode', 'country_id', 'city_id']]
+        [['uid', 'country_id', 'city_id'], 'required'],
+        [['city_id'], 'integer'],
+        [['uid'], 'string', 'max' => 23],
+        [['postcode'], 'string', 'max' => 20],
+        [['country_id'], 'string', 'max' => 2],
+        [['city_id'], 'exist', 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
+        [['country_id'], 'exist', 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'iso_2']],
+        [['uid'], 'unique', 'targetAttribute' => ['uid']],
+        [['postcode', 'country_id', 'city_id'], 'unique', 'targetAttribute' => ['postcode', 'country_id', 'city_id']],
         ];
     }
 
@@ -119,6 +125,22 @@ class Location extends \yii\db\ActiveRecord {
     public function getCountry()
     {
         return $this->hasOne(Country::className(), ['iso_2' => 'country_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNutsLocations()
+    {
+        return $this->hasMany(NutsLocation::className(), ['location_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNuts()
+    {
+        return $this->hasMany(Nuts::className(), ['code' => 'nuts_id'])->viaTable('nuts_location', ['location_id' => 'id']);
     }
 
     public function beforeValidate()

@@ -50,7 +50,7 @@ class m130524_201440_init extends Migration
          */
         $this->createTable('city', [
             'id' => $this->primaryKey(), //Auto-Incremented ID
-            'uid' => $this->string(23),
+            'uid' => $this->string(23)->notNull(),
             'language_id' => $this->string(5)->notNull(), //The default language for fallback purposes
         ]);
 
@@ -71,7 +71,7 @@ class m130524_201440_init extends Migration
          */
         $this->createTable('location', [
             'id' => $this->primaryKey(),
-            'uid' => $this->string(23),
+            'uid' => $this->string(23)->notNull(),
             'postcode' => $this->string(20), //Postal Code (Null values allowed),
             'country_id' => $this->string(2)->notNull(), //Foreign Key to country,
             'city_id' => $this->integer()->notNull(),
