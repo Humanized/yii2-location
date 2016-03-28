@@ -9,7 +9,8 @@ use humanized\location\models\location\Location;
 /**
  * LocationSearch represents the model behind the search form about `\humanized\location\models\location\Location`.
  */
-class LocationSearch extends Location {
+class LocationSearch extends Location
+{
 
     public $q = '';
 
@@ -65,6 +66,11 @@ class LocationSearch extends Location {
             //    $query->where('0=1');
             return $dataProvider;
         }
+
+        $query->andFilterWhere(
+                ['NOT IN', 'postcode', ['-1', '0']]
+        );
+
 
         $query->andFilterWhere([
             'or',

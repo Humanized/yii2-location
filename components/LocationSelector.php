@@ -19,7 +19,8 @@ use yii\helpers\Url;
  * @author Jeffrey Geyssens <jeffrey@humanized.be>
  * @package yii2-translation
  */
-class LocationSelector extends Widget {
+class LocationSelector extends Widget
+{
 
     public $form = NULL;
     public $model = NULL;
@@ -42,6 +43,8 @@ class LocationSelector extends Widget {
                     'options' => [ 'label' => 'yaya', 'placeholder' => 'Select Country ...', 'id' => 'country-selection']
         ]);
 
+        $module = \humanized\location\Module::getInstance();
+        \yii\helpers\VarDumper::dump($module);
         $locationDropdown = $this->form->field($this->model, 'location_id')->label(false)->widget(DepDrop::classname(), [
             'type' => DepDrop::TYPE_SELECT2, //For Select2
             'options' => ['id' => 'location-selection'],

@@ -2,7 +2,8 @@
 
 use yii\db\Migration;
 
-class m130524_201440_init extends Migration {
+class m130524_201440_init extends Migration
+{
 
     public function safeUp()
     {
@@ -22,12 +23,12 @@ class m130524_201440_init extends Migration {
             'iso_2' => $this->string(2)->notNull(), //ISO-2 Code is considered ID
             'iso_3' => $this->string(3)->notNull(), //ISOALPHA-3 Code is stored
             'iso_numerical' => $this->integer()->notNull(), //ISO Numerical Code UN M49 Numerical Code
-            'has_postcodes' => $this->boolean(TRUE)->notNull(),
+            'has_postcodes' => $this->boolean()->notNull(),
+            'city_count' => $this->integer()->defaultValue(0)->notNull(),
+            'postcode_count' => $this->integer()->defaultValue(0)->notNull(),
         ]);
 
         $this->addPrimaryKey('pk_country', 'country', 'iso_2');
-
-
         $this->createTable('country_translation', [
             'country_id' => $this->string(3)->notNull(), //ISO-2 Code is considered ID, but you will be able to set it to any of the country codes in a later version
             'language_id' => $this->string(5)->notNull(),
@@ -49,6 +50,7 @@ class m130524_201440_init extends Migration {
          */
         $this->createTable('city', [
             'id' => $this->primaryKey(), //Auto-Incremented ID
+            'uid' => $this->string(23),
             'language_id' => $this->string(5)->notNull(), //The default language for fallback purposes
         ]);
 
@@ -69,12 +71,14 @@ class m130524_201440_init extends Migration {
          */
         $this->createTable('location', [
             'id' => $this->primaryKey(),
+            'uid' => $this->string(23),
             'postcode' => $this->string(20), //Postal Code (Null values allowed),
             'country_id' => $this->string(2)->notNull(), //Foreign Key to country,
             'city_id' => $this->integer()->notNull(),
         ]);
         $this->addForeignKey('fk_location_city', 'location', 'city_id', 'city', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk_location_country', 'location', 'country_id', 'country', 'iso_2', 'CASCADE', 'CASCADE');
+
 
 
         return true;

@@ -34,7 +34,8 @@ use humanized\location\models\location\Location;
  * 
  * 
  */
-class ImportController extends Controller {
+class ImportController extends Controller
+{
 
     private $_languages = [
         'deu' => 'de', 'fra' => 'fr',
@@ -249,6 +250,45 @@ class ImportController extends Controller {
     public function actionMatchNuts()
     {
         Location::find()->all();
+    }
+
+    public function actionDummyData()
+    {
+        $countries = \humanized\location\models\location\Country::find()->select('iso_2')->asArray()->all();
+
+        foreach ($countries as $country) {
+            $countryId = $country['iso_2'];
+            $this->_dummyLocation($countryId, '!UNSET', '0');
+            $this->_dummyLocation($countryId, '!UNKNOWN', '-1');
+        }
+    }
+
+    private function _dummyLocation($countryId, $name, $postCode)
+    {
+        //CityTranslation::find()->where(['language_id' => 'EN', 'name' => $name])->queryScalar();
+
+
+        $dummyCity = new \humanized\location\models\location\City(['language_id' => 'EN']);
+        try {
+            $dummyCity->save();
+
+
+            try {
+                $dummyCityTranslation = new \humanized\location\models\translation\CityTranslation(['language_id' => 'EN', 'city_id' => $dummyCity->id, 'name' => $name]);
+                $dummyCityTranslation->save();
+
+                try {
+                    $dummyLocation = new \humanized\location\models\location\Location(['postcode' => $postCode, 'city_id' => $dummyCity->id, 'country_id' => $countryId]);
+                    $dummyLocation->save();
+                } catch (Exception $ex) {
+                    
+                }
+            } catch (Exception $ex) {
+                
+            }
+        } catch (\Exception $ex) {
+            
+        }
     }
 
 }
