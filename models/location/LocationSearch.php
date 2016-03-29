@@ -47,10 +47,9 @@ class LocationSearch extends Location
     public function search($params)
     {
         $this->load($params);
-        $query = $this->_queryCountry();
+        $query = Location::find();
 
         if (isset($this->uid)) {
-
             $this->pageSize = 1;
         }
 
@@ -66,13 +65,11 @@ class LocationSearch extends Location
             ]
         ]);
         if (isset($this->uid)) {
-
             // uncomment the following line if you do not want to return any records when validation fails
             $query->where(['location.uid' => $this->uid]);
             return $dataProvider;
         }
         if (!$this->validate()) {
-
             // uncomment the following line if you do not want to return any records when validation fails
             $query->where('0=1');
             return $dataProvider;

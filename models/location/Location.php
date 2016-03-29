@@ -94,6 +94,8 @@ class Location extends \yii\db\ActiveRecord
     protected function _queryCountry()
     {
         $query = Location::find();
+        
+        /*
         $language = Translation::current();
         $exp = new Expression("'$language'");
         $query->leftJoin('city', '`location`.`city_id`=`city`.`id`');
@@ -107,6 +109,8 @@ class Location extends \yii\db\ActiveRecord
             'postcode' => 'location.postcode',
             'language' => 'city.language_id'
         ];
+         * 
+         */
 
         $query->andWhere(['country_id' => $this->country_id]);
         return $query;
