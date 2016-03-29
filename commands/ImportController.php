@@ -109,19 +109,29 @@ class ImportController extends Controller
 
     public function actionImportDefault($fn)
     {
+        if (strlen($fn) != 5) {
+            $this->stderror('filename like <country-code>_<language-code> (5 characters - ommit .csv extension)' . "\n");
+        }
+
         $fileName = \Yii::getAlias('@data') . "/location/$fn.csv";
         $file = fopen($fileName, "r");
-        $countryCode = substr($fn, 0, 2);
-        $languageCode = substr($fn, 2, 2);
+        $countryCode = strtoupper(substr($fn, 0, 2));
+        $languageCode = strtoupper(substr($fn, 3, 2));
+        $this->stdout('Importing City Data for ' . $countryCode . ' in language ' . $languageCode . "\n");
         fgetcsv($file, 0);
         while (!feof($file)) {
             $record = fgetcsv($file, 0, ';');
-
             if (isset($record[0])) {
                 $city = new City(['language_id' => $languageCode]);
-                $city->save();
+                if (!$city->save()) {
+                    \yii\helpers\VarDumper::dump($city->errors);
+                }
                 (new CityTranslation(['name' => $record[1], 'city_id' => $city->id, 'language_id' => $languageCode]))->save();
-                (new Location(['city_id' => $city->id, 'country_id' => $countryCode, 'postcode' => $record[0]]))->save();
+                $location = new Location(['city_id' => $city->id, 'country_id' => $countryCode, 'postcode' => $record[0]]);
+                if (!$location->save()) {
+                    echo $location->city_id . '=' . $location->country_id . '=' . $location->uid . '=' . $location->postcode;
+                    //      \yii\helpers\VarDumper::dump($location->errors);
+                }
             } else {
                 break;
             }
@@ -172,7 +182,7 @@ class ImportController extends Controller
     {
         $code = $record->cca2;
         foreach ($record->translations as $key => $translation) {
-            (new CountryTranslation(['country_id' => $code, 'language_id' => $this->_languages[$key], 'official_name' => $translation->official, 'common_name' => $translation->common,]))->save();
+            (new CountryTranslation(['country_id' => $code, 'language_id' => strtoupper($this->_languages[$key]), 'official_name' => $translation->official, 'common_name' => $translation->common,]))->save();
         }
     }
 

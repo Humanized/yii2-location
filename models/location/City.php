@@ -112,10 +112,10 @@ class City extends \yii\db\ActiveRecord
         }
 
         //Remote Settings Empty --> Master Mode 
-        if (!isset($this->uid)) {
-            $this->uid = uniqid($prefix);
-            return true;
+        if ($this->isNewRecord && !isset($this->uid)) {
+            $this->uid = uniqid();
         }
+        return true;
     }
 
 }

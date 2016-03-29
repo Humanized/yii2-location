@@ -2,7 +2,7 @@
 
 namespace humanized\location\models\location;
 
-use humanized\translation\models\Language;
+use humanized\translation\models\Translation;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
@@ -96,9 +96,9 @@ class Country extends \yii\db\ActiveRecord {
     protected function _query()
     {
         $query = Country::find();
-        $currentLanguage = substr(Language::current(), 0, 2);
+        $currentLanguage = substr(Translation::current(), 0, 2);
         $local = new Expression("'$currentLanguage'");
-        $fallbackLanguage = substr(Language::fallback(), 0, 2);
+        $fallbackLanguage = substr(Translation::fallback(), 0, 2);
         $fallback = new Expression("'$fallbackLanguage'");
 
         $query->leftJoin('country_translation default_label', "(`country`.`iso_2`=`default_label`.`country_id` AND $fallback=`default_label`.`language_id`)");

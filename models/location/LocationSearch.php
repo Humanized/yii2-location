@@ -12,6 +12,8 @@ use humanized\location\models\location\Location;
 class LocationSearch extends Location
 {
 
+    public $pagination = FALSE;
+    public $pageSize = 25;
     public $q = '';
 
     /**
@@ -21,7 +23,8 @@ class LocationSearch extends Location
     {
         return [
             [['id', 'city_id'], 'integer'],
-            [['q', 'name', 'postcode', 'country_id'], 'safe'],
+            [['uid'], 'string'],
+            [['q', 'uid', 'name', 'postcode', 'country_id'], 'safe'],
         ];
     }
 
@@ -46,32 +49,37 @@ class LocationSearch extends Location
         $this->load($params);
         $query = $this->_queryCountry();
 
+        if (isset($this->uid)) {
+
+            $this->pageSize = 1;
+        }
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-            'pagination' => false,
+            'pagination' => ($this->pagination ? [
+                'pageSize' => $this->pageSize,
+                    ] : FALSE),
             'sort' => [
                 'attributes' => [
                     'name', 'postcode', 'language'
                 ],
             ]
         ]);
+        if (isset($this->uid)) {
 
-
-
-        if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
-            //    $query->where('0=1');
+            $query->where(['location.uid' => $this->uid]);
             return $dataProvider;
         }
+        if (!$this->validate()) {
 
+            // uncomment the following line if you do not want to return any records when validation fails
+            $query->where('0=1');
+            return $dataProvider;
+        }
         $query->andFilterWhere(
                 ['NOT IN', 'postcode', ['-1', '0']]
         );
-
-
         $query->andFilterWhere([
             'or',
             ['like', 'postcode', $this->q],
