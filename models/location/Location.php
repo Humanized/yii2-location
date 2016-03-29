@@ -5,6 +5,7 @@ namespace humanized\location\models\location;
 use humanized\translation\models\Language;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
+use humanized\location\components\Viajero;
 
 /**
  * This is the model class for table "location".
@@ -23,6 +24,7 @@ use yii\helpers\ArrayHelper;
 class Location extends \yii\db\ActiveRecord
 {
 
+    public $remoteSettings = [];
     public $name;
     public $label;
     public $language;
@@ -49,15 +51,15 @@ class Location extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-        [['uid', 'country_id', 'city_id'], 'required'],
-        [['city_id'], 'integer'],
-        [['uid'], 'string', 'max' => 23],
-        [['postcode'], 'string', 'max' => 20],
-        [['country_id'], 'string', 'max' => 2],
-        [['city_id'], 'exist', 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
-        [['country_id'], 'exist', 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'iso_2']],
-        [['uid'], 'unique', 'targetAttribute' => ['uid']],
-        [['postcode', 'country_id', 'city_id'], 'unique', 'targetAttribute' => ['postcode', 'country_id', 'city_id']],
+            [['uid', 'country_id', 'city_id'], 'required'],
+            [['city_id'], 'integer'],
+            [['uid'], 'string', 'max' => 23],
+            [['postcode'], 'string', 'max' => 20],
+            [['country_id'], 'string', 'max' => 2],
+            [['city_id'], 'exist', 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
+            [['country_id'], 'exist', 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'iso_2']],
+            [['uid'], 'unique', 'targetAttribute' => ['uid']],
+            [['postcode', 'country_id', 'city_id'], 'unique', 'targetAttribute' => ['postcode', 'country_id', 'city_id']],
         ];
     }
 
@@ -145,6 +147,9 @@ class Location extends \yii\db\ActiveRecord
 
     public function beforeValidate()
     {
+        if (parent::beforeValidate()) {
+            return false;
+        }
         if (isset($this->cityName) && isset($this->cityLanguage)) {
             $params = [
                 'name' => $this->cityName,
@@ -157,7 +162,42 @@ class Location extends \yii\db\ActiveRecord
             }
             $this->city_id = $model->id;
         }
-        return parent::beforeValidate();
+        return true;
+    }
+
+    public static function testRemote()
+    {
+        
+    }
+
+    public static function findRemote($uid)
+    {
+        $model = self::findOne(['uid' => $this->uid]);
+        if (!isset($model)) {
+            $model = new Location(['uid' => $this->uid]);
+            $model->syncRemote();
+        }
+        return $model;
+    }
+
+    public function syncRemote()
+    {
+        //Make Connection - Ensure that Connection Parameters exist
+
+        $config = \Yii::$app->params['viajero'];
+        $this->_validateRemoteConnectionParameters($config);
+        $client = new Viajero();
+
+        $list = Json::decode($client->request('GET', "places?country=be")->getBody(), true);
+    }
+
+    private function _validateRemoteConnectionParameters()
+    {
+
+
+        if (!isset($this->uid)) {
+            throw new \yii\base\InvalidConfigException("Model UID must be set for remote synchronisation");
+        }
     }
 
 }

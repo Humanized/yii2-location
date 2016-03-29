@@ -21,6 +21,8 @@ use Yii;
 class City extends \yii\db\ActiveRecord
 {
 
+    public $remoteSettings = [];
+
     /**
      * @inheritdoc
      */
@@ -101,6 +103,19 @@ class City extends \yii\db\ActiveRecord
     public function getLocations()
     {
         return $this->hasMany(Location::className(), ['city_id' => 'id']);
+    }
+
+    public function beforeValidate()
+    {
+        if (!parent::beforeValidate()) {
+            return false;
+        }
+
+        //Remote Settings Empty --> Master Mode 
+        if (!isset($this->uid)) {
+            $this->uid = uniqid($prefix);
+            return true;
+        }
     }
 
 }

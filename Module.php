@@ -13,8 +13,13 @@ namespace humanized\location;
  * @author Jeffrey Geyssens <jeffrey@humanized.be>
  * @package yii2-user
  */
-class Module extends \yii\base\Module {
+class Module extends \yii\base\Module
+{
 
+    const MASTER_MODE = 'master';
+    const SLAVE_MODE = 'slave';
+
+    public $mode = NULL;
     public $tablePrefix = NULL;
     public $enableRemote = FALSE;
     public $remoteSettings = ['uri' => NULL, 'token' => NULL];
@@ -33,6 +38,10 @@ class Module extends \yii\base\Module {
 
     private function _initRemote()
     {
+        if (!isset($this->mode)) {
+            $this->mode = self::MASTER_MODE;
+        }
+        $this->params['mode'] = $this->mode;
         $this->params['enableRemote'] = TRUE;
         if (!empty($this->remoteSettings)) {
             $this->params['remoteSettings'] = $this->remoteSettings;
