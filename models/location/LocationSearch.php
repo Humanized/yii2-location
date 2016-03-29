@@ -48,6 +48,12 @@ class LocationSearch extends Location
     {
         $this->load($params);
         $query = Location::find();
+        $query->select(['*', 'uid' => 'location.uid', 'name' => 'city_translation.name', 'language' => 'city.language_id']);
+        $query->innerJoin('city', 'location.city_id=city.id');
+        $query->leftJoin('city_translation', 'city_translation.city_id=city.id');
+        //$query->andWhere(['city.language_id' => 'city_translation.language_id']);
+        //   $query->joinWith('city');
+        //    $query->joinWith('city.localisedIdentification');
 
         if (isset($this->uid)) {
             $this->pageSize = 1;

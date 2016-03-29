@@ -21,8 +21,6 @@ use Yii;
 class City extends \yii\db\ActiveRecord
 {
 
-    public $remoteSettings = [];
-
     /**
      * @inheritdoc
      */
@@ -57,65 +55,82 @@ class City extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLanguage()
+    public function fields()
     {
-        return $this->hasOne(Language::className(), ['code' => 'language_id']);
-    }
+        return [
+            // field name is the same as the attribute name
+            'uid', 'language' => 'language_id', 'local_name' => function($model) {
+                $x = CityTranslation::find()->joinWith('city')->where(['uid' => $model->uid, 'city_translation.language_id' => $model->language_id])->one();
+                return $x->name;
+            }
+                ];
+            }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCityTranslations()
-    {
-        return $this->hasMany(CityTranslation::className(), ['city_id' => 'id']);
-    }
+            public function extraFields()
+            {
+                return ['translations' => 'cityTranslations'];
+            }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getDefaultIdentification()
-    {
-        return $this->hasOne(CityTranslation::className(), ['city_id' => 'id'])->onCondition(['`city_translation`.`language_id`' => '`city`.`language_id`']);
-    }
+            /**
+             * @return \yii\db\ActiveQuery
+             */
+            public function getLanguage()
+            {
+                return $this->hasOne(Language::className(), ['code' => 'language_id']);
+            }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLocalisedIdentification()
-    {
-        return $this->hasOne(CityTranslation::className(), ['city_id' => 'id'])->onCondition(['`city_translation`.`language_id`' => '`city`.`language_id`']);
-    }
+            /**
+             * @return \yii\db\ActiveQuery
+             */
+            public function getCityTranslations()
+            {
+                return $this->hasMany(CityTranslation::className(), ['city_id' => 'id']);
+            }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLanguages()
-    {
-        return $this->hasMany(Language::className(), ['code' => 'language_id'])->viaTable('city_translation', ['city_id' => 'id']);
-    }
+            /**
+             * @return \yii\db\ActiveQuery
+             */
+            public function getName()
+            {
+                return $this->hasOne(CityTranslation::className(), ['city_id' => 'id']);
+            }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLocations()
-    {
-        return $this->hasMany(Location::className(), ['city_id' => 'id']);
-    }
+            /**
+             * @return \yii\db\ActiveQuery
+             */
+            public function getLocalisedIdentification()
+            {
+                return $this->hasOne(CityTranslation::className(), ['city_id' => 'id'])->onCondition(['`city_translation`.`language_id`' => '`city`.`language_id`']);
+            }
 
-    public function beforeValidate()
-    {
-        if (!parent::beforeValidate()) {
-            return false;
+            /**
+             * @return \yii\db\ActiveQuery
+             */
+            public function getLanguages()
+            {
+                return $this->hasMany(Language::className(), ['code' => 'language_id'])->viaTable('city_translation', ['city_id' => 'id']);
+            }
+
+            /**
+             * @return \yii\db\ActiveQuery
+             */
+            public function getLocations()
+            {
+                return $this->hasMany(Location::className(), ['city_id' => 'id']);
+            }
+
+            public function beforeValidate()
+            {
+                if (!parent::beforeValidate()) {
+                    return false;
+                }
+
+                //Remote Settings Empty --> Master Mode 
+                if ($this->isNewRecord && !isset($this->uid)) {
+                    $this->uid = uniqid();
+                }
+                return true;
+            }
+
         }
-
-        //Remote Settings Empty --> Master Mode 
-        if ($this->isNewRecord && !isset($this->uid)) {
-            $this->uid = uniqid();
-        }
-        return true;
-    }
-
-}
+        

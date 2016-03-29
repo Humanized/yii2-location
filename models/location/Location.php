@@ -40,8 +40,8 @@ class Location extends \yii\db\ActiveRecord
     public function fields()
     {
         return [
-            // field name is the same as the attribute name
-            'uid', 'postcode', 'name', 'label'
+        // field name is the same as the attribute name
+        'uid', 'county' => 'country_id', 'name', 'postcode', 'city'
         ];
     }
 
@@ -94,23 +94,23 @@ class Location extends \yii\db\ActiveRecord
     protected function _queryCountry()
     {
         $query = Location::find();
-        
-        /*
-        $language = Translation::current();
-        $exp = new Expression("'$language'");
-        $query->leftJoin('city', '`location`.`city_id`=`city`.`id`');
-        $query->leftJoin('city_translation default_label', '(`city`.`id`=`default_label`.`city_id` AND `city`.`language_id`=`default_label`.`language_id`)');
-        $query->leftJoin('city_translation localised_label', "(`city`.`id`=`localised_label`.`city_id` AND $exp =`localised_label`.`language_id`)");
 
-        $query->select = [
-            'id' => 'location.id',
-            'name' => 'IF(localised_label.name IS NULL, default_label.name, localised_label.name)',
-            'label' => 'CONCAT(IF(localised_label.name IS NULL, default_label.name, localised_label.name),\' (\',postcode,\')\')',
-            'postcode' => 'location.postcode',
-            'language' => 'city.language_id'
+        /*
+          $language = Translation::current();
+          $exp = new Expression("'$language'");
+          $query->leftJoin('city', '`location`.`city_id` = `city`.`id`');
+          $query->leftJoin('city_translation default_label', '(`city`.`id` = `default_label`.`city_id` AND `city`.`language_id` = `default_label`.`language_id`)');
+          $query->leftJoin('city_translation localised_label', "(`city`.`id`=`localised_label`.`city_id` AND $exp =`localised_label`.`language_id`)");
+
+          $query->select = [
+          'id' => 'location.id',
+          'name' => 'IF(localised_label.name IS NULL, default_label.name, localised_label.name)',
+          'label' => 'CONCAT(IF(localised_label.name IS NULL, default_label.name, localised_label.name), \' (\',postcode,\')\')',
+        'postcode' => 'location.postcode',
+        'language' => 'city.language_id'
         ];
-         * 
-         */
+        *
+        */
 
         $query->andWhere(['country_id' => $this->country_id]);
         return $query;
@@ -156,7 +156,7 @@ class Location extends \yii\db\ActiveRecord
         }
         //Remote Settings Empty --> Master Mode 
         if (!isset($this->uid)) {
-             //echo "Generating UID";
+            //echo "Generating UID";
             $this->uid = uniqid();
         }
         if (isset($this->cityName) && isset($this->cityLanguage)) {
