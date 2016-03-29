@@ -107,7 +107,7 @@ class ImportController extends Controller
         }
     }
 
-    public function actionImportDefault($fn)
+    public function actionDefault($fn)
     {
         if (strlen($fn) != 5) {
             $this->stderror('filename like <country-code>_<language-code> (5 characters - ommit .csv extension)' . "\n");
@@ -118,7 +118,7 @@ class ImportController extends Controller
         $countryCode = strtoupper(substr($fn, 0, 2));
         $languageCode = strtoupper(substr($fn, 3, 2));
         $this->stdout('Importing City Data for ' . $countryCode . ' in language ' . $languageCode . "\n");
-        fgetcsv($file, 0);
+        //fgetcsv($file, 0);
         while (!feof($file)) {
             $record = fgetcsv($file, 0, ';');
             if (isset($record[0])) {
