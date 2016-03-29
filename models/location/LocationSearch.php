@@ -69,11 +69,12 @@ class LocationSearch extends Location
             $query->where(['location.uid' => $this->uid]);
             return $dataProvider;
         }
-        if (!$this->validate()) {
+        if (!$this->validate() || !isset($this->country_id)) {
             // uncomment the following line if you do not want to return any records when validation fails
             $query->where('0=1');
             return $dataProvider;
         }
+        $query->andFilterWhere(['country_id' => $this->country_id]);
         $query->andFilterWhere(
                 ['NOT IN', 'postcode', ['-1', '0']]
         );
