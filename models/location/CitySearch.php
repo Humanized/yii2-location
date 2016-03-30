@@ -47,8 +47,8 @@ class CitySearch extends City
     {
         $this->load($params);
         $query = City::find();
-        $query->select(['*', 'uid' => 'location.uid', 'name' => 'city_translation.name', 'language' => 'city.language_id']);
-        $query->innerJoin('city', 'location.city_id=city.id');
+        $query->select(['*', 'name' => 'city_translation.name', 'language' => 'city.language_id']);
+
         $query->leftJoin('city_translation', 'city_translation.city_id=city.id');
         //$query->andWhere(['city.language_id' => 'city_translation.language_id']);
         //   $query->joinWith('city');
@@ -71,23 +71,15 @@ class CitySearch extends City
         ]);
         if (isset($this->uid)) {
             // uncomment the following line if you do not want to return any records when validation fails
-            $query->where(['location.uid' => $this->uid]);
+            $query->where(['uid' => $this->uid]);
             return $dataProvider;
         }
-        if (!$this->validate() || !isset($this->country_id)) {
+        if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             $query->where('0=1');
             return $dataProvider;
         }
-        $query->andFilterWhere(['country_id' => $this->country_id]);
-        $query->andFilterWhere(
-                ['NOT IN', 'postcode', ['-1', '0']]
-        );
-        $query->andFilterWhere([
-            'or',
-            ['like', 'postcode', $this->q],
-            ['like', 'city_translation.name', $this->q],
-        ]);
+
 
 
 
