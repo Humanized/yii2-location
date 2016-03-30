@@ -62,7 +62,7 @@ class City extends \yii\db\ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
 
-        echo 'TRUE';
+
         $search = ['language_id' => $this->language_id, 'city_id' => $this->id];
         $model = CityTranslation::findOne($search);
         if (!isset($model)) {
@@ -71,7 +71,6 @@ class City extends \yii\db\ActiveRecord
         //Sync from Master
         $model->name = $this->local_name;
 
-        echo 'ASSHOLE';
         if (!$model->save()) {
             echo 'yaay';
             var_dump($model->errors);
