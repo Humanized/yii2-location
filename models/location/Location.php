@@ -192,6 +192,7 @@ class Location extends \yii\db\ActiveRecord
 
     public function syncRemote()
     {
+        echo "here";
         //Make Connection - Ensure that Connection Parameters exist
         if (!isset($this->uid)) {
             throw new \yii\base\InvalidConfigException("Model UID must be set for remote synchronisation");
@@ -217,7 +218,7 @@ class Location extends \yii\db\ActiveRecord
             if (isset($model)) {
                 $this->city_id = $model->id;
                 $this->country_id = $data['country'];
-                $this->language_id = $data['language'];
+                $this->postcode = $data['postcode'];
                 $this->save();
             }
         }

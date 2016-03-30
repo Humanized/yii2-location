@@ -99,6 +99,7 @@ class City extends \yii\db\ActiveRecord
         $formatted = Json::decode($raw, true);
         if (count($formatted == 1)) {
             $data = $formatted[0];
+            $this->local_name = $data['name'];
             $this->language_id = $data['language'];
             return $this->save();
         }
@@ -108,7 +109,7 @@ class City extends \yii\db\ActiveRecord
     {
         return [
             // field name is the same as the attribute name
-            'uid', 'language_id', 'name' => function($model) {
+            'uid', 'language' => 'language_id', 'name' => function($model) {
                 $localTranslation = CityTranslation::find()->joinWith('city')->where(['uid' => $model->uid, 'city_translation.language_id' => $model->language_id])->one();
                 return $localTranslation->name;
             }
