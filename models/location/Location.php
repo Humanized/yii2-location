@@ -42,7 +42,7 @@ class Location extends \yii\db\ActiveRecord
     {
         return [
             // field name is the same as the attribute name
-            'uid', 'county' => 'country_id', 'name', 'postcode', 'place'=>'city'
+            'uid', 'country' => 'country_id', 'name', 'postcode', 'place' => 'city'
         ];
     }
 
@@ -205,11 +205,20 @@ class Location extends \yii\db\ActiveRecord
                 ])->getBody();
 
         $formatted = Json::decode($raw, true);
+        \yii\helpers\VarDumper::dump($formatted);
         if (count($formatted == 1)) {
-            $data = $formatted[0];
 
+            $data = $formatted[0];
             if (!isset($data['place']) || !isset($data['place']['uid'])) {
                 throw new \UnexpectedValueException('Location: syncRemote - Unexpected Data format');
+            }
+
+            $model = City::findRemote($data['place']['uid']);
+            if (isset($model)) {
+                $this->city_id = $model->id;
+                $this->country_id = $data['country'];
+                $this->language_id = $data['language'];
+                $this->save();
             }
         }
     }
