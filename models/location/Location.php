@@ -40,8 +40,8 @@ class Location extends \yii\db\ActiveRecord
     public function fields()
     {
         return [
-        // field name is the same as the attribute name
-        'uid', 'county' => 'country_id', 'name', 'postcode', 'city'
+            // field name is the same as the attribute name
+            'uid', 'county' => 'country_id', 'name', 'postcode', 'city'
         ];
     }
 
@@ -106,11 +106,11 @@ class Location extends \yii\db\ActiveRecord
           'id' => 'location.id',
           'name' => 'IF(localised_label.name IS NULL, default_label.name, localised_label.name)',
           'label' => 'CONCAT(IF(localised_label.name IS NULL, default_label.name, localised_label.name), \' (\',postcode,\')\')',
-        'postcode' => 'location.postcode',
-        'language' => 'city.language_id'
-        ];
-        *
-        */
+          'postcode' => 'location.postcode',
+          'language' => 'city.language_id'
+          ];
+         *
+         */
 
         $query->andWhere(['country_id' => $this->country_id]);
         return $query;
@@ -181,9 +181,9 @@ class Location extends \yii\db\ActiveRecord
 
     public static function findRemote($uid)
     {
-        $model = self::findOne(['uid' => $this->uid]);
+        $model = self::findOne(['uid' => $uid]);
         if (!isset($model)) {
-            $model = new Location(['uid' => $this->uid]);
+            $model = new Location(['uid' => $uid]);
             $model->syncRemote();
         }
         return $model;
@@ -197,8 +197,15 @@ class Location extends \yii\db\ActiveRecord
         }
 
         $client = new Viajero();
+        $raw = $client->get('places', [
+                    'query' =>
+                    [
+                        'uid' => $this->uid
+                    ]
+                ])->getBody();
 
-        $list = Json::decode($client->request('GET', "places?country=be")->getBody(), true);
+        $list = Json::decode($raw, true);
+        \yii\helpers\VarDumper::dump($formatted);
     }
 
 }

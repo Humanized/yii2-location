@@ -24,7 +24,7 @@ class LocationSearch extends Location
         return [
             [['id', 'city_id'], 'integer'],
             [['uid'], 'string'],
-            [['q', 'uid', 'name', 'postcode', 'country_id'], 'safe'],
+            [['uid', 'name', 'postcode', 'country_id'], 'safe'],
         ];
     }
 
@@ -87,8 +87,7 @@ class LocationSearch extends Location
         $query->andFilterWhere([
             'or',
             ['like', 'postcode', $this->q],
-            ['like', 'localised_label.name', $this->q],
-            ['like', 'default_label.name', $this->q],
+            ['like', 'city_translation.name', $this->q],
         ]);
 
 
