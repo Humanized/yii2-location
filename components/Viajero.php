@@ -17,7 +17,6 @@ class Viajero extends \GuzzleHttp\Client
         if (!isset($config)) {
             throw new \yii\base\InvalidConfigException("Accessible params array missing index viajero");
         }
-        var_dump($config);
         if (!isset($config['remoteUri'])) {
             throw new \yii\base\InvalidConfigException("Viajero remote configuration missing the remoteUri parameter");
         }

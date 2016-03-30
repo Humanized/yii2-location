@@ -4,6 +4,8 @@ namespace humanized\location\models\location;
 
 use humanized\location\models\translation\CityTranslation;
 use humanized\translation\models\Language;
+use humanized\location\components\Viajero;
+use yii\helpers\Json;
 use Yii;
 
 /**
@@ -20,6 +22,8 @@ use Yii;
  */
 class City extends \yii\db\ActiveRecord
 {
+
+    public $local_name;
 
     /**
      * @inheritdoc
@@ -55,11 +59,24 @@ class City extends \yii\db\ActiveRecord
         ];
     }
 
+    public function afterSave($insert, $changedAttributes)
+    {
+        if (!parent::afterSave($insert, $changedAttributes)) {
+            return false;
+        }
+        if ($insert) {
+            if (!(new CityTranslation(['language_id' => $this->language_id, 'city_id' => $this->id, 'name' => $this->local_name]))->save()) {
+                $this->delete();
+                return false;
+            }
+        }
+    }
+
     public static function findRemote($uid)
     {
         $model = self::findOne(['uid' => $uid]);
         if (!isset($model)) {
-            $model = new Location(['uid' => $uid]);
+            $model = new City(['uid' => $uid]);
             $model->syncRemote();
         }
         return $model;
@@ -82,7 +99,8 @@ class City extends \yii\db\ActiveRecord
         $formatted = Json::decode($raw, true);
         if (count($formatted == 1)) {
             $data = $formatted[0];
-            \yii\helpers\VarDumper::dump($data);
+            $this->language_id = $data['language'];
+            return $this->save();
         }
     }
 
@@ -90,9 +108,9 @@ class City extends \yii\db\ActiveRecord
     {
         return [
             // field name is the same as the attribute name
-            'uid', 'language' => 'language_id', 'local_name' => function($model) {
-                $x = CityTranslation::find()->joinWith('city')->where(['uid' => $model->uid, 'city_translation.language_id' => $model->language_id])->one();
-                return $x->name;
+            'uid', 'language_id', 'name' => function($model) {
+                $localTranslation = CityTranslation::find()->joinWith('city')->where(['uid' => $model->uid, 'city_translation.language_id' => $model->language_id])->one();
+                return $localTranslation->name;
             }
                 ];
             }
