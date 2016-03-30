@@ -122,15 +122,15 @@ class ImportController extends Controller
         while (!feof($file)) {
             $record = fgetcsv($file, 0, ';');
             if (isset($record[0])) {
-                $city = new City(['language_id' => $languageCode]);
+                $city = new City(['language_id' => $languageCode, 'local_name' => $record[1]]);
                 if (!$city->save()) {
                     \yii\helpers\VarDumper::dump($city->errors);
                 }
-                (new CityTranslation(['name' => $record[1], 'city_id' => $city->id, 'language_id' => $languageCode]))->save();
+                //    (new CityTranslation(['name' => $record[1], 'city_id' => $city->id, 'language_id' => $languageCode]))->save();
                 $location = new Location(['city_id' => $city->id, 'country_id' => $countryCode, 'postcode' => $record[0]]);
                 if (!$location->save()) {
                     echo $location->city_id . '=' . $location->country_id . '=' . $location->uid . '=' . $location->postcode;
-                    //      \yii\helpers\VarDumper::dump($location->errors);
+                    \yii\helpers\VarDumper::dump($location->errors);
                 }
             } else {
                 break;
