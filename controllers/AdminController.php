@@ -13,7 +13,8 @@ use GuzzleHttp\Client;
 /**
  * LocationController implements the CRUD actions for Location model.
  */
-class AdminController extends Controller {
+class AdminController extends Controller
+{
 
     /**
      * @inheritdoc
@@ -41,7 +42,7 @@ class AdminController extends Controller {
             $model = new Location(); //reset model
         }
 
-        $searchModel = new LocationSearch(['pagination'=>TRUE]);
+        $searchModel = new LocationSearch(['pagination' => TRUE]);
         $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -115,29 +116,24 @@ class AdminController extends Controller {
 
     public function actionLoad()
     {
+        $countryCode = 'US';
         if (isset($_POST['depdrop_parents'])) {
             $countryCode = $_POST['depdrop_parents'][0];
-            $list = NULL;
-            if (!\Yii::$app->controller->module->params['enableRemote']) {
-                $list = Location::all($countryCode);
-            } else {
-                //Get API Results
-                $client = new Client([
-                    // Base URI is used with relative requests
-                    'base_uri' => \Yii::$app->controller->module->params['remoteSettings']['uri'],
-                    'auth' => [\Yii::$app->controller->module->params['remoteSettings']['token'], ''],
-                ]);
-                $list = Json::decode($client->request('GET', "places?country=$countryCode")->getBody(), true);
-            }
-            //Map data
-            //Records are format ['id'=>$rec['id],'name'=>$rec['label']]
-            $data = array_map(function($r) {
-                return ['id' => $r['id'], 'name' => $r['label']];
-            }, $list);
-            echo Json::encode(['output' => $data, 'selected' => '']);
-            return;
         }
-        echo Json::encode(['output' => '', 'selected' => '']);
+
+        //Get API Results
+        $client = new \humanized\location\components\Viajero();
+        //Initialise List
+        $data = NULL;
+
+        $input = Json::decode($client->get("places", ['query' => ['country' => $countryCode]])->getBody(), true);
+        //Map data
+        //Records are format ['id'=>$rec['id],'name'=>$rec['label']]
+        $data = array_map(function($apiRow) {
+            return ['id' => $apiRow['uid'], 'name' => $apiRow['name']];
+        }, $input);
+        echo Json::encode(['output' => (isset($data) ? $data : ''), 'selected' => '']);
+        return;
     }
 
     public function loadDefault()

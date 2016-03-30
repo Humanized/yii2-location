@@ -43,15 +43,14 @@ class LocationSelector extends Widget
                     'options' => [ 'label' => 'yaya', 'placeholder' => 'Select Country ...', 'id' => 'country-selection']
         ]);
 
-        $module = \humanized\location\Module::getInstance();
-        \yii\helpers\VarDumper::dump($module);
+
         $locationDropdown = $this->form->field($this->model, 'location_id')->label(false)->widget(DepDrop::classname(), [
             'type' => DepDrop::TYPE_SELECT2, //For Select2
             'options' => ['id' => 'location-selection'],
             'select2Options' => [
                 'pluginOptions' => [
                     'allowClear' => TRUE,
-                    'minimumInputLength' => 3,
+            
                 ]
             ],
             'pluginOptions' => [
