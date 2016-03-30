@@ -55,6 +55,37 @@ class City extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function findRemote($uid)
+    {
+        $model = self::findOne(['uid' => $uid]);
+        if (!isset($model)) {
+            $model = new Location(['uid' => $uid]);
+            $model->syncRemote();
+        }
+        return $model;
+    }
+
+    public function syncRemote()
+    {
+        //Make Connection - Ensure that Connection Parameters exist
+        if (!isset($this->uid)) {
+            throw new \yii\base\InvalidConfigException("Model UID must be set for remote synchronisation");
+        }
+
+        $raw = (new Viajero())->get('cities', [
+                    'query' =>
+                    [
+                        'uid' => $this->uid
+                    ]
+                ])->getBody();
+
+        $formatted = Json::decode($raw, true);
+        if (count($formatted == 1)) {
+            $data = $formatted[0];
+            \yii\helpers\VarDumper::dump($data);
+        }
+    }
+
     public function fields()
     {
         return [

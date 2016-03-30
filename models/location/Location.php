@@ -4,6 +4,7 @@ namespace humanized\location\models\location;
 
 use humanized\translation\models\Translation;
 use yii\db\Expression;
+use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
 use humanized\location\components\Viajero;
 
@@ -41,7 +42,7 @@ class Location extends \yii\db\ActiveRecord
     {
         return [
             // field name is the same as the attribute name
-            'uid', 'county' => 'country_id', 'name', 'postcode', 'city'
+            'uid', 'county' => 'country_id', 'name', 'postcode', 'place'=>'city'
         ];
     }
 
@@ -196,16 +197,21 @@ class Location extends \yii\db\ActiveRecord
             throw new \yii\base\InvalidConfigException("Model UID must be set for remote synchronisation");
         }
 
-        $client = new Viajero();
-        $raw = $client->get('places', [
+        $raw = (new Viajero())->get('places', [
                     'query' =>
                     [
                         'uid' => $this->uid
                     ]
                 ])->getBody();
 
-        $list = Json::decode($raw, true);
-        \yii\helpers\VarDumper::dump($formatted);
+        $formatted = Json::decode($raw, true);
+        if (count($formatted == 1)) {
+            $data = $formatted[0];
+
+            if (!isset($data['place']) || !isset($data['place']['uid'])) {
+                throw new \UnexpectedValueException('Location: syncRemote - Unexpected Data format');
+            }
+        }
     }
 
 }
