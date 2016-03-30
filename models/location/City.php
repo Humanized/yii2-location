@@ -61,15 +61,24 @@ class City extends \yii\db\ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
-        if (!parent::afterSave($insert, $changedAttributes)) {
+
+        echo 'TRUE';
+        $search = ['language_id' => $this->language_id, 'city_id' => $this->id];
+        $model = CityTranslation::findOne($search);
+        if (!isset($model)) {
+            $model = new CityTranslation($search);
+        }
+        //Sync from Master
+        $model->name = $this->local_name;
+
+        echo 'ASSHOLE';
+        if (!$model->save()) {
+            echo 'yaay';
+            var_dump($model->errors);
+            $this->delete();
             return false;
         }
-        if ($insert) {
-            if (!(new CityTranslation(['language_id' => $this->language_id, 'city_id' => $this->id, 'name' => $this->local_name]))->save()) {
-                $this->delete();
-                return false;
-            }
-        }
+        return parent::afterSave($insert, $search);
     }
 
     public static function findRemote($uid)
@@ -84,7 +93,7 @@ class City extends \yii\db\ActiveRecord
 
     public function syncRemote()
     {
-        //Make Connection - Ensure that Connection Parameters exist
+//Make Connection - Ensure that Connection Parameters exist
         if (!isset($this->uid)) {
             throw new \yii\base\InvalidConfigException("Model UID must be set for remote synchronisation");
         }
@@ -101,14 +110,16 @@ class City extends \yii\db\ActiveRecord
             $data = $formatted[0];
             $this->local_name = $data['name'];
             $this->language_id = $data['language'];
-            return $this->save();
+            if (!$this->save()) {
+                \yii\helpers\VarDumper::dump($this->errors);
+            }
         }
     }
 
     public function fields()
     {
         return [
-            // field name is the same as the attribute name
+// field name is the same as the attribute name
             'uid', 'language' => 'language_id', 'name' => function($model) {
                 $localTranslation = CityTranslation::find()->joinWith('city')->where(['uid' => $model->uid, 'city_translation.language_id' => $model->language_id])->one();
                 return $localTranslation->name;
