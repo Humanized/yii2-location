@@ -43,7 +43,7 @@ class City extends \yii\db\ActiveRecord
             [['uid'], 'string', 'max' => 23],
             [['language_id'], 'string', 'max' => 5],
             [['language_id'], 'exist', 'skipOnError' => true, 'targetClass' => Language::className(), 'targetAttribute' => ['language_id' => 'code']],
-            [['uid'], 'unique', 'targetAttribute' => ['uid']]
+            [['uid'], 'unique', 'targetAttribute' => ['uid']],
         ];
     }
 
