@@ -5,13 +5,10 @@ use yii\db\Migration;
 class m130524_201440_init extends Migration
 {
 
+    protected $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
+
     public function safeUp()
     {
-        $tableOptions = null;
-        if ($this->db->driverName === 'mysql') {
-            // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
-        }
 
         /**
          * Create Country Table
@@ -26,7 +23,7 @@ class m130524_201440_init extends Migration
             'has_postcodes' => $this->boolean()->notNull(),
             'city_count' => $this->integer()->defaultValue(0)->notNull(),
             'postcode_count' => $this->integer()->defaultValue(0)->notNull(),
-        ]);
+                ], $this->tableOptions);
 
         $this->addPrimaryKey('pk_country', 'country', 'iso_2');
         $this->createTable('country_translation', [
@@ -36,7 +33,7 @@ class m130524_201440_init extends Migration
             'common_name' => $this->string(255)->notNull(),
             'adjectival' => $this->string(255),
             'demonym' => $this->string(255),
-        ]);
+                ], $this->tableOptions);
 
 
         $this->addPrimaryKey('pk_country_translation', 'country_translation', ['country_id', 'language_id']);
@@ -52,14 +49,14 @@ class m130524_201440_init extends Migration
             'id' => $this->primaryKey(), //Auto-Incremented ID
             'uid' => $this->string(23)->notNull(),
             'language_id' => $this->string(5)->notNull(), //The default language for fallback purposes
-        ]);
+        ], $this->tableOptions);
 
         $this->addForeignKey('fk_city_language', 'city', 'language_id', 'language', 'code', 'CASCADE', 'CASCADE');
         $this->createTable('city_translation', [
             'language_id' => $this->string(2)->notNull(),
             'city_id' => $this->integer()->notNull(), //ISO-2 Code is considered ID
             'name' => $this->string(255)->notNull(),
-        ]);
+        ],$this->tableOptions);
         $this->addPrimaryKey('pk_city_translation', 'city_translation', ['city_id', 'language_id']);
         $this->addForeignKey('fk_city_translation_language', 'city_translation', 'language_id', 'language', 'code', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk_city_translation_city', 'city_translation', 'city_id', 'city', 'id', 'CASCADE', 'CASCADE');
@@ -75,7 +72,7 @@ class m130524_201440_init extends Migration
             'postcode' => $this->string(20), //Postal Code (Null values allowed),
             'country_id' => $this->string(2)->notNull(), //Foreign Key to country,
             'city_id' => $this->integer()->notNull(),
-        ]);
+        ],$this->tableOptions);
         $this->addForeignKey('fk_location_city', 'location', 'city_id', 'city', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk_location_country', 'location', 'country_id', 'country', 'iso_2', 'CASCADE', 'CASCADE');
 
