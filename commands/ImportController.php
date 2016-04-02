@@ -107,19 +107,113 @@ class ImportController extends Controller
         }
     }
 
+    public function actionBulk($path = NULL)
+    {
+        if (!isset($path)) {
+            $path = \Yii::getAlias('@data') . "/location/XXX";
+        }
+        $folders = scandir($path);
+
+        foreach ($folders as $folder) {
+
+            if ($folder != '.' && $folder != '..') {
+                $filePath = $path . '/' . $folder;
+                $files = scandir($filePath);
+                $this->stdout('Importing ' . $folder . "\n");
+
+                $cityFile = NULL;
+                $postcodeFile = NULL;
+                foreach ($files as $file) {
+
+                    switch (strlen($file)) {
+                        case 6: {
+                                $postcodeFile = $file;
+                                break;
+                            }
+                        case 9: {
+                                $cityFile = $file;
+                                break;
+                            }
+                    }
+                }
+                $this->importDefault(substr($postcodeFile, 0, 2), $filePath . '/' . $cityFile, $filePath . '/' . $postcodeFile, substr($cityFile, 3, 2));
+            }
+        }
+    }
+
+    public function importDefault($countryCode, $cityFile, $postcodeFile, $languageCode)
+    {
+        $this->stdout('importing city file for: ' . $countryCode);
+        $this->importCityFile($countryCode, $cityFile, $languageCode);
+        $this->stdout('importing postcode file for: ' . $countryCode);
+        $this->importPostcodeFile($countryCode, $postcodeFile, $languageCode);
+    }
+
+    private function importCityFile($countryCode, $cityFile, $languageCode)
+    {
+        $cityData = fopen($cityFile, "r");
+        while (!feof($cityData)) {
+
+            $record = fgetcsv($cityData, 0, ';');
+
+            if (isset($record[0])) {
+
+                $city = new City(['language_id' => $languageCode, 'uid' => $countryCode . '-' . $record[0], 'local_name' => $record[1]]);
+
+                if (!$city->save()) {
+                    \yii\helpers\VarDumper::dump($city->errors);
+                }
+            } else {
+                break;
+            }
+        }
+    }
+
+    private function importPostcodeFile($countryCode, $postcodeFile, $languageCode)
+    {
+        $postData = fopen($postcodeFile, "r");
+        while (!feof($postData)) {
+
+            $record = fgetcsv($postData, 0, ';');
+
+            if (isset($record[0])) {
+                $uid = $countryCode . '-' . $record[0];
+                echo $uid;
+                $city = City::findOne(['uid' => $uid]);
+                if (isset($city)) {
+                    $location = new Location(['city_id' => $city->id, 'country_id' => $countryCode, 'postcode' => $record[1]]);
+                    if (!$location->save()) {
+                        \yii\helpers\VarDumper::dump($location->errors);
+                    }
+                }
+            } else {
+                break;
+            }
+        }
+    }
+
     public function actionDefault($fn)
     {
         if (strlen($fn) != 5) {
             $this->stderror('filename like <country-code>_<language-code> (5 characters - ommit .csv extension)' . "\n");
         }
+//if filename is not 5 characters long, throw an error and display filename model
 
         $fileName = \Yii::getAlias('@data') . "/location/$fn.csv";
+        //resolve file url from /location/
+
         $file = fopen($fileName, "r");
+
         $countryCode = strtoupper(substr($fn, 0, 2));
+
         $languageCode = strtoupper(substr($fn, 3, 2));
+
         $this->stdout('Importing City Data for ' . $countryCode . ' in language ' . $languageCode . "\n");
-        //fgetcsv($file, 0);
+
+//fgetcsv($file, 0);
+
         while (!feof($file)) {
+
             $record = fgetcsv($file, 0, ';');
             if (isset($record[0])) {
                 $city = new City(['language_id' => $languageCode, 'local_name' => $record[1]]);
