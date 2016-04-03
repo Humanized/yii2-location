@@ -185,13 +185,14 @@ class Location extends \yii\db\ActiveRecord
         $model = self::findOne(['uid' => $uid]);
         if (!isset($model)) {
             $model = new Location(['uid' => $uid]);
-            $model->syncRemote();
+            $model->download();
         }
         return $model;
     }
 
-    public function syncRemote()
+    public function download()
     {
+
         //Make Connection - Ensure that Connection Parameters exist
         if (!isset($this->uid)) {
             throw new \yii\base\InvalidConfigException("Model UID must be set for remote synchronisation");
@@ -205,7 +206,7 @@ class Location extends \yii\db\ActiveRecord
                 ])->getBody();
 
         $formatted = Json::decode($raw, true);
-        \yii\helpers\VarDumper::dump($formatted);
+        //  \yii\helpers\VarDumper::dump($formatted);
         if (count($formatted == 1)) {
 
             $data = $formatted[0];
@@ -217,7 +218,7 @@ class Location extends \yii\db\ActiveRecord
             if (isset($model)) {
                 $this->city_id = $model->id;
                 $this->country_id = $data['country'];
-                $this->language_id = $data['language'];
+                $this->postcode = $data['postcode'];
                 $this->save();
             }
         }

@@ -43,7 +43,7 @@ class City extends \yii\db\ActiveRecord
             [['uid'], 'string', 'max' => 23],
             [['language_id'], 'string', 'max' => 5],
             [['language_id'], 'exist', 'skipOnError' => true, 'targetClass' => Language::className(), 'targetAttribute' => ['language_id' => 'code']],
-            [['uid'], 'unique', 'targetAttribute' => ['uid']]
+            [['uid'], 'unique', 'targetAttribute' => ['uid']],
         ];
     }
 
@@ -61,15 +61,23 @@ class City extends \yii\db\ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
-        if (!parent::afterSave($insert, $changedAttributes)) {
+
+
+        $search = ['language_id' => $this->language_id, 'city_id' => $this->id];
+        $model = CityTranslation::findOne($search);
+        if (!isset($model)) {
+            $model = new CityTranslation($search);
+        }
+        //Sync from Master
+        $model->name = $this->local_name;
+
+        if (!$model->save()) {
+            echo 'yaay';
+            var_dump($model->errors);
+            $this->delete();
             return false;
         }
-        if ($insert) {
-            if (!(new CityTranslation(['language_id' => $this->language_id, 'city_id' => $this->id, 'name' => $this->local_name]))->save()) {
-                $this->delete();
-                return false;
-            }
-        }
+        return parent::afterSave($insert, $search);
     }
 
     public static function findRemote($uid)
@@ -84,7 +92,7 @@ class City extends \yii\db\ActiveRecord
 
     public function syncRemote()
     {
-        //Make Connection - Ensure that Connection Parameters exist
+//Make Connection - Ensure that Connection Parameters exist
         if (!isset($this->uid)) {
             throw new \yii\base\InvalidConfigException("Model UID must be set for remote synchronisation");
         }
@@ -99,8 +107,11 @@ class City extends \yii\db\ActiveRecord
         $formatted = Json::decode($raw, true);
         if (count($formatted == 1)) {
             $data = $formatted[0];
+            $this->local_name = $data['name'];
             $this->language_id = $data['language'];
-            return $this->save();
+            if (!$this->save()) {
+                \yii\helpers\VarDumper::dump($this->errors);
+            }
         }
     }
 
