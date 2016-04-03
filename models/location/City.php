@@ -108,7 +108,7 @@ class City extends \yii\db\ActiveRecord
     {
         return [
             // field name is the same as the attribute name
-            'uid', 'language_id', 'name' => function($model) {
+            'id','uid', 'language_id', 'name' => function($model) {
                 $localTranslation = CityTranslation::find()->joinWith('city')->where(['uid' => $model->uid, 'city_translation.language_id' => $model->language_id])->one();
                 return $localTranslation->name;
             }

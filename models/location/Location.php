@@ -42,7 +42,7 @@ class Location extends \yii\db\ActiveRecord
     {
         return [
             // field name is the same as the attribute name
-            'uid', 'country' => 'country_id', 'name', 'postcode', 'place' => 'city'
+            'id','uid', 'country' => 'country_id', 'name', 'postcode', 'place' => 'city'
         ];
     }
 
