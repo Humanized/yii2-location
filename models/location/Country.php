@@ -14,7 +14,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $iso_numerical
  * @property Location[] $locations
  */
-class Country extends \yii\db\ActiveRecord {
+class Country extends \yii\db\ActiveRecord
+{
 
     public $label;
     public $code;
@@ -46,6 +47,7 @@ class Country extends \yii\db\ActiveRecord {
             [['iso_2', 'iso_3', 'iso_numerical', 'has_postcodes'], 'required'],
             [['iso_numerical'], 'integer'],
             [['has_postcodes'], 'integer', 'max' => 1],
+            [['postcode_mask'], 'string', 'max' => 100],
             [['iso_2'], 'string', 'max' => 2],
             [['iso_3'], 'string', 'max' => 3],
                 //[['name', 'adjectival', 'demonym'], 'string', 'max' => 255],

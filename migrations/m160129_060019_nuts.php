@@ -12,7 +12,7 @@ class m160129_060019_nuts extends Migration
 
         $this->createTable('nuts_code', [
             'id' => $this->string(10),
-            'description' => $this->string(255),
+            'name' => $this->string(255),
             'country_id' => $this->string(2),
                 ], $this->tableOptions);
         $this->addPrimaryKey('pk_nuts', 'nuts_code', 'id');
