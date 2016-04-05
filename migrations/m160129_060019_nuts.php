@@ -16,7 +16,7 @@ class m160129_060019_nuts extends Migration
             'country_id' => $this->string(2),
                 ], $this->tableOptions);
         $this->addPrimaryKey('pk_nuts', 'nuts_code', 'id');
-        $this->addForeignKey('fk_nuts_country', 'nuts', 'cp', 'nuts', 'code', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('fk_nuts_country', 'nuts', 'country_id', 'nuts', 'code', 'CASCADE', 'CASCADE');
 
 
         $this->createTable('nuts_hierarchy', [
@@ -32,10 +32,13 @@ class m160129_060019_nuts extends Migration
         $this->createTable('nuts_location', [
             'id' => $this->primaryKey(),
             'nuts_code_id' => $this->string(20)->notNull(),
+            'postcode' => $this->string(20)->notNull(),
+            'country_id' => $this->integer()->notNull(),
             'location_id' => $this->integer()
                 ], $this->tableOptions);
+        $this->addForeignKey('fk_nuts_country', 'nuts', 'cp', 'nuts', 'code', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk_nuts_location_nuts', 'nuts_location', 'nuts_id', 'nuts_code', 'id', 'CASCADE', 'CASCADE');
-        $this->addForeignKey('fk_nuts_location_location', 'nuts_location', 'location_id', 'location', 'id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('fk_nuts_location_location_optional', 'nuts_location', 'location_id', 'location', 'id', 'CASCADE', 'CASCADE');
         //   $this->addPrimaryKey('pk_nuts_location', 'nuts_location', ['nuts_id', 'location_id']);
     }
 
