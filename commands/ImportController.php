@@ -56,12 +56,34 @@ class ImportController extends Controller
 
     public function actionNuts()
     {
-        $folder = \Yii::getAlias('@data') . '/nuts/';
-        $files = scandir($folder . 'code/');
+        $folder = \Yii::getAlias('@data') . '/nuts/pcc-free/';
+        $files = scandir($folder);
 
         foreach ($files as $file) {
-            if ($folder != '.' && $folder != '..') {
-                
+            if ($file != '.' && $file != '..') {
+                echo $folder . "\n";
+                $this->_processNuts($folder, $file);
+            }
+        }
+        return 0;
+    }
+
+    private function _processNuts($path, $fileName)
+    {
+        $countryId = strtoupper(substr($fileName, 3, 2));
+        echo 'Processing ' . $countryId . "\n";
+        $file = fopen($path . $fileName, "r");
+
+        while (!feof($file)) {
+            $record = fgetcsv($file, 0, ';');
+            if (isset($record[0])) {
+
+                $postcode = $record[0];
+                $nuts3 = $record[1];
+                $model = new \humanized\location\models\nuts\NutsLocation(['country_id' => $countryId, 'postcode' => $postcode, 'nuts_code_id' => $nuts3]);
+                $model->save();
+            } else {
+                break;
             }
         }
     }
