@@ -2,36 +2,41 @@
 
 use yii\db\Migration;
 
-class m160129_060019_nuts extends Migration {
+class m160129_060019_nuts extends Migration
+{
+
     protected $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
 
     public function safeUp()
     {
-        
-        $this->createTable('nuts', [
-            'code' => $this->string(20),
-            'description' => $this->string(255)
-        ],  $this->tableOptions);
-        $this->addPrimaryKey('pk_nuts', 'nuts', 'code');
-     
+
+        $this->createTable('nuts_code', [
+            'id' => $this->string(10),
+            'description' => $this->string(255),
+            'country_id' => $this->string(2),
+                ], $this->tableOptions);
+        $this->addPrimaryKey('pk_nuts', 'nuts_code', 'id');
+        $this->addForeignKey('fk_nuts_country', 'nuts', 'cp', 'nuts', 'code', 'CASCADE', 'CASCADE');
+
 
         $this->createTable('nuts_hierarchy', [
-            'parent' => $this->string(20)->notNull(),
-            'child' => $this->string(20)->notNull(),
+            'parent_id' => $this->string(20)->notNull(),
+            'child_id' => $this->string(20)->notNull(),
             'is_offspring' => $this->boolean(0)->notNull(),
             'depth' => $this->integer()->notNull()
-        ], $this->tableOptions);
-        $this->addForeignKey('fk_nuts_parent', 'nuts_hierarchy', 'parent', 'nuts', 'code', 'CASCADE', 'CASCADE');
-        $this->addForeignKey('fk_nuts_child', 'nuts_hierarchy', 'child', 'nuts', 'code', 'CASCADE', 'CASCADE');
+                ], $this->tableOptions);
+        $this->addForeignKey('fk_nuts_parent', 'nuts_hierarchy', 'parent_id', 'nuts_code', 'id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('fk_nuts_child', 'nuts_hierarchy', 'child_id', 'nuts_code', 'id', 'CASCADE', 'CASCADE');
         $this->addPrimaryKey('pk_nuts_hierarchy', 'nuts_hierarchy', ['parent', 'child']);
 
         $this->createTable('nuts_location', [
-            'nuts_id' => $this->string(20)->notNull(),
-            'location_id' => $this->integer()->notNull()
-        ], $this->tableOptions);
-        $this->addForeignKey('fk_nuts_location_nuts', 'nuts_location', 'nuts_id', 'nuts', 'code', 'CASCADE', 'CASCADE');
+            'id' => $this->primaryKey(),
+            'nuts_code_id' => $this->string(20)->notNull(),
+            'location_id' => $this->integer()
+                ], $this->tableOptions);
+        $this->addForeignKey('fk_nuts_location_nuts', 'nuts_location', 'nuts_id', 'nuts_code', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk_nuts_location_location', 'nuts_location', 'location_id', 'location', 'id', 'CASCADE', 'CASCADE');
-        $this->addPrimaryKey('pk_nuts_location', 'nuts_location', ['nuts_id', 'location_id']);
+        //   $this->addPrimaryKey('pk_nuts_location', 'nuts_location', ['nuts_id', 'location_id']);
     }
 
     public function safeDown()

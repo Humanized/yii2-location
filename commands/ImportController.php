@@ -56,36 +56,14 @@ class ImportController extends Controller
 
     public function actionNuts()
     {
-        $this->path = \Yii::getAlias('@data') . '/nuts/nuts.csv';
-        $this->table = 'nuts';
-        // $this->actionIndex();
-        $p = \Yii::getAlias('@data') . '/nuts/pcc-free/';
-        /*
-          $result = fopen($p . 'correspondence', "w") or die("Unable to open file!");
+        $folder = \Yii::getAlias('@data') . '/nuts/';
+        $files = scandir($folder . 'code/');
 
-          foreach (scandir($p) as $file) {
-          if (substr($file, 0, 2) == 'pc') {
-          $country = strtoupper(substr($file, 3, 2));
-          echo 'Processing ' . $country . "\n";
-          $this->path = $p . $file;
-          $fx = fopen($p . $file, "r");
-          while (!feof($fx)) {
-          $record = fgetcsv($fx, 0,';');
-          if (isset($record[0])) {
-          fwrite($result, "\"$record[0]\";\"$record[1]\";\"$country\"\n");
-          } else {
-          break;
-          }
-          }
-          }
-          }
-          fclose($result);
-         * 
-         */
-        $this->delimiter = ';';
-        $this->path = $p . 'correspondence';
-        $this->table = 'nuts_correspondence';
-        $this->actionIndex();
+        foreach ($files as $file) {
+            if ($folder != '.' && $folder != '..') {
+                
+            }
+        }
     }
 
     public function actionImportBe()
