@@ -42,7 +42,7 @@ class Location extends \yii\db\ActiveRecord
     {
         return [
             // field name is the same as the attribute name
-            'id','uid', 'country' => 'country_id', 'name', 'postcode', 'place' => 'city'
+            'id', 'uid', 'country' => 'country_id', 'name', 'postcode', 'place' => 'city'
         ];
     }
 
@@ -160,14 +160,15 @@ class Location extends \yii\db\ActiveRecord
             //echo "Generating UID";
             $this->uid = uniqid();
         }
-        if (isset($this->cityName) && isset($this->cityLanguage)) {
+        if (isset($this->name) && isset($this->language)) {
             $params = [
-                'name' => $this->cityName,
-                'language_id' => strtoupper($this->cityLanguage),
+                'city_translation.name' => $this->name,
+                'city.language_id' => strtoupper($this->language),
             ];
-            $model = City::findOne($params);
+            $model = City::find()->where($params)->joinWith('name')->one();
             if (!isset($model)) {
-                $model = new City($params);
+                $model = new City(['local_name' => $this->name,
+                    'language_id' => strtoupper($this->language),]);
                 $model->save();
             }
             $this->city_id = $model->id;
