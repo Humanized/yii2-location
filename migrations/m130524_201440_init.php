@@ -1,5 +1,7 @@
 <?php
 
+namespace humanized\location\migrations;
+
 use yii\db\Migration;
 
 class m130524_201440_init extends Migration
@@ -38,7 +40,7 @@ class m130524_201440_init extends Migration
 
 
         $this->addPrimaryKey('pk_country_translation', 'country_translation', ['country_id', 'language_id']);
-        $this->addForeignKey('fk_country_tanslation_language', 'country_translation', 'language_id', 'language', 'code', 'CASCADE', 'CASCADE');
+        //$this->addForeignKey('fk_country_tanslation_language', 'country_translation', 'language_id', 'language', 'code', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk_country_tanslation_country', 'country_translation', 'country_id', 'country', 'iso_2', 'CASCADE', 'CASCADE');
 
         /*
@@ -52,14 +54,14 @@ class m130524_201440_init extends Migration
             'language_id' => $this->string(5)->notNull(), //The default language for fallback purposes
                 ], $this->tableOptions);
 
-        $this->addForeignKey('fk_city_language', 'city', 'language_id', 'language', 'code', 'CASCADE', 'CASCADE');
+        //$this->addForeignKey('fk_city_language', 'city', 'language_id', 'language', 'code', 'CASCADE', 'CASCADE');
         $this->createTable('city_translation', [
             'language_id' => $this->string(2)->notNull(),
             'city_id' => $this->integer()->notNull(), //ISO-2 Code is considered ID
             'name' => $this->string(255)->notNull(),
                 ], $this->tableOptions);
         $this->addPrimaryKey('pk_city_translation', 'city_translation', ['city_id', 'language_id']);
-        $this->addForeignKey('fk_city_translation_language', 'city_translation', 'language_id', 'language', 'code', 'CASCADE', 'CASCADE');
+        //$this->addForeignKey('fk_city_translation_language', 'city_translation', 'language_id', 'language', 'code', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk_city_translation_city', 'city_translation', 'city_id', 'city', 'id', 'CASCADE', 'CASCADE');
 
 
@@ -84,7 +86,11 @@ class m130524_201440_init extends Migration
 
     public function safeDown()
     {
-        $this->dropTable('{{%user}}');
+        $this->dropTable('location');
+        $this->dropTable('city_translation');
+        $this->dropTable('city');
+        $this->dropTable('country_translation');
+        $this->dropTable('country');
     }
 
 }
