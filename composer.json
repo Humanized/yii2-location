@@ -24,7 +24,10 @@
     ],
     "require": {
         "yiisoft/yii2": ">=2.0.7",
-        "humanized/php-locale-helpers": "*"
+        "humanized/php-locale-helpers": "*",
+		"kartik-v/yii2-widgets": "*",
+		"humanized/yii2-translation" : "*"，
+		"humanized/yii2-clihelpers" : "*"
     },
     "autoload": {
         "psr-4": {

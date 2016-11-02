@@ -21,6 +21,8 @@ class Country extends \yii\db\ActiveRecord
     public $code;
     public $common_name;
     public $official_name;
+	
+	protected static $_countries;
 
     /**
      * @inheritdoc
@@ -79,9 +81,12 @@ class Country extends \yii\db\ActiveRecord
 
     public static function available()
     {
-        $searchModel = (new Country())->_query();
+		if (!isset(self::$_countries)) {
+			$searchModel = (new Country())->_query();
+			self::$_countries = $searchModel->asArray()->all();
+		}
 
-        return $searchModel->asArray()->all();
+        return self::$_countries;
     }
 
     public static function dropdown()
@@ -94,17 +99,29 @@ class Country extends \yii\db\ActiveRecord
     {
         
     }
+	
+	protected function getModuleByClassName($class) {
+		$modules = \Yii::$app->getModules();
+		foreach ($modules as $id => $module) {
+			if ($module['class'] == $class) {
+				return $id;
+			}
+		}
+	}
 
     protected function _query()
     {
         $query = Country::find();
-        $currentLanguage = substr(Translation::current(), 0, 2);
+        $currentLanguage = substr(\Yii::$app->language, 0, 2);
+		
+		$module = \Yii::$app->getModule($this->getModuleByClassName(\humanized\location\Module::className()));
+		
         $local = new Expression("'$currentLanguage'");
-        $fallbackLanguage = substr(Translation::fallback(), 0, 2);
+        $fallbackLanguage = substr($module->defaultLanguage, 0, 2);
         $fallback = new Expression("'$fallbackLanguage'");
 
-        $query->leftJoin('country_translation default_label', "(`country`.`iso_2`=`default_label`.`country_id` AND $fallback=`default_label`.`language_id`)");
-        $query->leftJoin('country_translation localised_label', "(`country`.`iso_2`=`localised_label`.`country_id` AND $local =`localised_label`.`language_id`)");
+        $query->leftJoin('country_translation default_label', "(`country`.`iso_2`=`default_label`.`country_id` AND `default_label`.`language_id` = $fallback)");
+        $query->leftJoin('country_translation localised_label', "(`country`.`iso_2`=`localised_label`.`country_id` AND `localised_label`.`language_id` = $local)");
         $query->select = [
             'code' => 'iso_2',
             'label' => 'CONCAT(IF(localised_label.common_name IS NULL, default_label.common_name,localised_label.common_name),\' (\',iso_2,\')\')',

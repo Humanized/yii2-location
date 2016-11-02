@@ -23,6 +23,7 @@ class Module extends \yii\base\Module
     public $tablePrefix = NULL;
     public $enableRemote = FALSE;
     public $remoteSettings = ['uri' => NULL, 'token' => NULL];
+	public $defaultLanguage = 'en';
 
     public function init()
     {

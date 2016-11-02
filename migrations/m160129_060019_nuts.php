@@ -1,5 +1,7 @@
 <?php
 
+namespace humanized\location\migrations;
+
 use yii\db\Migration;
 
 class m160129_060019_nuts extends Migration
@@ -44,9 +46,9 @@ class m160129_060019_nuts extends Migration
 
     public function safeDown()
     {
-        echo "m160129_060019_nuts cannot be reverted.\n";
-
-        return false;
+		$this->dropTable('nuts_location');
+		$this->dropTable('nuts_hierarchy');
+        $this->dropTable('nuts_code');
     }
 
 }
